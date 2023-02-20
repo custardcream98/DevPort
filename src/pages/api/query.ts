@@ -49,15 +49,20 @@ const translationClient = new TranslationServiceClient({
 
 const promptTemplate = (
   audience: string,
-) => `Present as many questions as possible with a resume consisted of the four items(Introduce, Experience, Skills, Projects) below. Consider that grammer can be awkward. And stick to the options below.
+) => `Play an interviewer working as ${audience}. Generate questions based on a resume consisted of the four items(Introduce, Experience, Skills, Projects) below. And stick to the options below.
 ---
 - Format : Markdown
-- Question Topic : Resume
 - Question Difficulty : Hard
 - Question Quantity : 10
 - Question Audience : ${audience}
 - Question Purpose : Job Interview
 - Question Language : English
+---
+I want the response format to be like this:
+
+1. What is your name?
+2. How old are you?
+
 ---
 `;
 
