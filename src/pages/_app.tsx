@@ -1,5 +1,6 @@
 import { css, Global } from "@emotion/react";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 
 const globalStyle = css`
   html,
@@ -163,9 +164,40 @@ const globalStyle = css`
   }
 `;
 
+const TITLE = "DEVPORT: 이력서 면접 질문 생성기";
+const DESCRIPTION = "이력서 기반 예상 면접 질문 제공 서비스입니다.";
+const KEYWORDS = ["이력서", "면접", "질문", "취준", "취업 준비"];
+const IMAGE = "/images/og-image.png";
+const IMAGE_WIDTH = "1200";
+const IMAGE_HEIGHT = "675";
+const IMAGE_ALT = "DEVPORT: 이력서 면접 질문 생성기";
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
+      <Head>
+        <title>{TITLE}</title>
+        <meta name="description" content={DESCRIPTION} />
+        <meta name="keywords" content={KEYWORDS.join(", ")} />
+
+        <meta property="og:title" content={TITLE} />
+        <meta name="og:description" content={DESCRIPTION} />
+        <meta property="og:url" content="https://dev-port-omega.vercel.app/" />
+        <meta property="og:image" content={IMAGE} />
+        <meta property="og:image:alt" content={IMAGE_ALT} />
+        <meta property="og:image:width" content={IMAGE_WIDTH} />
+        <meta property="og:image:height" content={IMAGE_HEIGHT} />
+        <meta property="og:site_name" content={TITLE} />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={TITLE} />
+        <meta name="twitter:description" content={DESCRIPTION} />
+        <meta name="twitter:site" content="@ova_sw" />
+        <meta name="twitter:image" content={IMAGE} />
+        <meta name="twitter:image:alt" content={IMAGE_ALT} />
+        <meta name="twitter:creator" content="@ova_sw" />
+      </Head>
       <Global styles={globalStyle} />
       <Component {...pageProps} />
     </>

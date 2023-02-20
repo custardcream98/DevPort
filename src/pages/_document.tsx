@@ -1,20 +1,11 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import Script from "next/script";
 
-const TITLE = "DEVPORT: 이력서 면접 질문 생성기";
-const DESCRIPTION = "이력서 기반 예상 면접 질문 제공 서비스입니다.";
-const KEYWORDS = ["이력서", "면접", "질문", "취준", "취업 준비"];
-const IMAGE = "/images/og-image.png";
-const IMAGE_WIDTH = "1200";
-const IMAGE_HEIGHT = "675";
-const IMAGE_ALT = "DEVPORT: 이력서 면접 질문 생성기";
-
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="ko">
         <Head>
-          <title>{TITLE}</title>
           <link
             rel="apple-touch-icon"
             sizes="57x57"
@@ -91,32 +82,8 @@ export default class MyDocument extends Document {
             content="/images/favicons/ms-icon-144x144.png"
           />
           <meta name="theme-color" content="#008080" />
-          <meta name="description" content={DESCRIPTION} />
-          <meta name="keywords" content={KEYWORDS.join(", ")} />
 
-          <meta property="og:title" content={TITLE} />
           <meta property="og:locale" content="ko_KR" />
-
-          <meta property="og:type" content="website" />
-
-          <meta name="og:description" content={DESCRIPTION} />
-          <meta
-            property="og:url"
-            content="https://dev-port-omega.vercel.app/"
-          />
-          <meta property="og:image" content={IMAGE} />
-          <meta property="og:image:alt" content={IMAGE_ALT} />
-          <meta property="og:image:width" content={IMAGE_WIDTH} />
-          <meta property="og:image:height" content={IMAGE_HEIGHT} />
-          <meta property="og:site_name" content={TITLE} />
-
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={TITLE} />
-          <meta name="twitter:description" content={DESCRIPTION} />
-          <meta name="twitter:site" content="@ova_sw" />
-          <meta name="twitter:image" content={IMAGE} />
-          <meta name="twitter:image:alt" content={IMAGE_ALT} />
-          <meta name="twitter:creator" content="@ova_sw" />
 
           {/* <!-- Google tag (gtag.js) --> */}
           <Script
