@@ -31,11 +31,16 @@ const complete = async (prompt: string) => {
     n: 1,
   });
 
-  const { text: result } = completion.data.choices[0];
+  console.log(completion.data);
 
-  if (!result) {
+  const { text } = completion.data.choices[0];
+
+  if (!text) {
     throw new Error("No completion result");
   }
+
+  const result = text.slice(text.indexOf("1."));
+
   return result;
 };
 
