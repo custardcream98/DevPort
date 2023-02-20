@@ -19,7 +19,11 @@ const REQUEST_BODY_KEY_LIST = [
 const isValidBody = (body: any): body is QueryRequestBody => {
   return Object.keys(body).every((key) => {
     if (REQUEST_BODY_KEY_LIST.includes(key)) {
-      if (typeof body[key] === "string") return true;
+      if (
+        typeof body[key] === "string" ||
+        (typeof body[key] === "boolean" && key === "shouldTranslate")
+      )
+        return true;
     }
     return false;
   });
