@@ -54,9 +54,10 @@ const promptTemplate = (
 - Format : Markdown
 - Question Topic : Resume
 - Question Difficulty : Hard
-- Question Quantity : 20 ~ 40
+- Question Quantity : 10
 - Question Audience : ${audience}
 - Question Purpose : Job Interview
+- Question Language : English
 ---
 `;
 
