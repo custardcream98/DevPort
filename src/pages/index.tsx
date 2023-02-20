@@ -163,5 +163,8 @@ const StyledButton = styled.button`
   color: white;
   font-weight: 500;
 
-  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+  :hover {
+    background-color: #007272;
+  }
 `;

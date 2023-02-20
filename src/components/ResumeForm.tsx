@@ -91,13 +91,16 @@ const StyledButton = styled.button`
   color: white;
   font-weight: 500;
 
-  cursor: pointer;
-
   font-size: 1.5rem;
   margin: 1rem 0 2rem;
   padding: 0.8rem 0;
 
   width: 100%;
+
+  transition: background-color 0.1s ease-in-out;
+  :hover {
+    background-color: #007272;
+  }
 `;
 const StyledForm = styled.form`
   width: 100%;
