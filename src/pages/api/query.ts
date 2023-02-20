@@ -3,52 +3,46 @@ import { translateEnToKo, translateKoToEn } from "lib/translate";
 import { complete } from "lib/openai";
 import { promptTemplate } from "template/prompt";
 import { calNumberOfTokens } from "lib/token";
+import type { QueryRequestBody, QueryResponse } from "types/api";
 
 const MAX_TOKENS_FOR_QUERY = 1300;
 
-const isValidBody = <T extends Record<string, unknown>>(
-  body: any,
-  fields: (keyof T)[],
-): body is T => {
-  return Object.keys(body).every((key) => fields.includes(key));
+const REQUEST_BODY_KEY_LIST = [
+  "introduce",
+  "experience",
+  "skills",
+  "projects",
+  "shouldTranslate",
+  "audience",
+];
+
+const isValidBody = (body: any): body is QueryRequestBody => {
+  return Object.keys(body).every((key) => {
+    if (REQUEST_BODY_KEY_LIST.includes(key)) {
+      if (typeof body[key] === "string") return true;
+    }
+    return false;
+  });
 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse<QueryResponse>,
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return res
+      .status(405)
+      .json({ type: "rejected", error: "Method Not Allowed" });
   }
 
   const { body } = req;
 
-  if (
-    !isValidBody(body, [
-      "introduce",
-      "experience",
-      "skills",
-      "projects",
-      "shouldTranslate",
-      "audience",
-    ])
-  ) {
-    return res.status(400).json({ error: "Invalid body" });
+  if (!isValidBody(body)) {
+    return res.status(400).json({ type: "rejected", error: "Invalid body" });
   }
 
   const { introduce, experience, skills, projects, shouldTranslate, audience } =
     body;
-
-  if (
-    typeof audience !== "string" ||
-    typeof introduce !== "string" ||
-    typeof experience !== "string" ||
-    typeof skills !== "string" ||
-    typeof projects !== "string" ||
-    typeof shouldTranslate !== "boolean"
-  ) {
-    return res.status(400).json({ error: "Invalid body" });
-  }
 
   if (!shouldTranslate) {
     const promptInKr = promptTemplate(
@@ -72,11 +66,11 @@ export default async function handler(
     try {
       const completion = await complete(promptInKr);
 
-      return res.status(200).json({ response: completion });
+      return res.status(200).json({ type: "resolved", response: completion });
     } catch (error) {
       console.warn(error);
 
-      return res.status(500).json({ error });
+      return res.status(500).json({ type: "rejected", error });
     }
   }
 
@@ -110,12 +104,13 @@ export default async function handler(
     const completion = await complete(prompt);
     const translatedCompletion = await translateEnToKo(completion);
 
-    return res
-      .status(200)
-      .json({ response: translatedCompletion + "\n\n" + completion });
+    return res.status(200).json({
+      type: "resolved",
+      response: translatedCompletion + "\n\n" + completion,
+    });
   } catch (error) {
     console.warn(error);
 
-    return res.status(500).json({ error });
+    return res.status(500).json({ type: "rejected", error });
   }
 }

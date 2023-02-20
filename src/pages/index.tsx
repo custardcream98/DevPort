@@ -3,10 +3,26 @@ import { useCallback, useRef, useState } from "react";
 
 import AudienceSelect from "components/AudienceSelect";
 import ResumeForm from "components/ResumeForm";
+import Footer from "components/Footer";
 
 import testData from "fixture/testData";
 
 import type { ResumeFormRef } from "components/ResumeForm";
+import type {
+  QueryResolvedResponse,
+  QueryTokensCountExceededResponse,
+} from "types/api";
+
+const isQueryResultTokenExceedError = (
+  error: unknown,
+): error is QueryTokensCountExceededResponse => {
+  if (typeof error === "object" && error !== null) {
+    if ("type" in error && error.type === "tokensCountExceeded") {
+      return true;
+    }
+  }
+  return false;
+};
 
 export default function Home() {
   const [response, setResponse] = useState("");
@@ -25,6 +41,14 @@ export default function Home() {
 
       setResponse("질문을 생성하고 있습니다.");
 
+      const shouldTranslateCheckbox = shouldTranslateCheckboxRef.current;
+      const audienceSelect = audienceSelectRef.current;
+
+      if (!shouldTranslateCheckbox || !audienceSelect) {
+        setResponse("질문 생성에 실패했습니다.");
+        return;
+      }
+
       try {
         const response = await fetch("/api/query", {
           method: "POST",
@@ -33,35 +57,26 @@ export default function Home() {
           },
           body: JSON.stringify({
             ...data,
-            shouldTranslate: shouldTranslateCheckboxRef.current?.checked,
-            audience: audienceSelectRef.current?.value,
+            shouldTranslate: shouldTranslateCheckbox.checked,
+            audience: audienceSelect.value,
           }),
         });
 
-        const result: { response: string } = await response.json();
+        const result: QueryResolvedResponse = await response.json();
 
         setResponse(result.response);
       } catch (error) {
         console.error(error);
 
-        if (typeof error === "object" && error !== null) {
-          if (
-            "type" in error &&
-            error.type === "tokensCountExceeded" &&
-            "tokens" in error &&
-            "max" in error
-          ) {
-            setResponse(
-              "토큰 수 초과, 현재 토큰 수: " +
-                error.tokens +
-                ", 최대 토큰 수: " +
-                error.max,
-            );
-            return;
-          }
+        if (isQueryResultTokenExceedError(error)) {
+          const { tokens, max } = error;
+          setResponse(
+            `글자 수가 너무 많습니다.\n\n현재 토큰 수: ${tokens}\n최대 토큰 수: ${max}`,
+          );
+          return;
         }
 
-        setResponse("답변 생성 실패");
+        setResponse("질문 생성에 실패했습니다.");
       }
     },
     [],
@@ -111,28 +126,7 @@ export default function Home() {
         <ResumeForm ref={resumeFormRef} handleSubmit={handleSubmit} />
         {response && <StyledResultP>{response}</StyledResultP>}
       </Layout>
-      <Footer>
-        <small>&copy; 2023 custardcream98. All rights reserved.</small>
-        <address>
-          <ul className="address-list">
-            <li>
-              <a href="https://github.com/custardcream98" target="_blank">
-                Github
-              </a>
-            </li>
-            <li>
-              <a href="https://custardcream.vercel.app/" target="_blank">
-                Blog
-              </a>
-            </li>
-            <li>
-              <a href="mailto:custardcream@kakao.com" target="_blank">
-                Email
-              </a>
-            </li>
-          </ul>
-        </address>
-      </Footer>
+      <Footer />
     </>
   );
 }
@@ -145,25 +139,6 @@ const Title = styled.h1`
 `;
 const Layout = styled.main`
   padding: 1rem;
-`;
-const Footer = styled.footer`
-  text-align: center;
-  color: #707070;
-
-  .address-list {
-    display: flex;
-    justify-content: center;
-    gap: 0.7rem;
-
-    margin: 0.5rem;
-
-    a {
-      transition: all 0.2s ease-in-out;
-    }
-    a:hover {
-      color: #009753;
-    }
-  }
 `;
 
 const StyledResultP = styled.p`
