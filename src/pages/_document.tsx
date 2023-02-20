@@ -4,8 +4,8 @@ const TITLE = "DEVPORT: 이력서 면접 질문 생성기";
 const DESCRIPTION = "이력서 기반 예상 면접 질문 제공 서비스입니다.";
 const KEYWORDS = ["이력서", "면접", "질문", "취준", "취업 준비"];
 const IMAGE = "/images/og-image.png";
-const IMAGE_WIDTH = "4400";
-const IMAGE_HEIGHT = "2475";
+const IMAGE_WIDTH = "1200";
+const IMAGE_HEIGHT = "675";
 const IMAGE_ALT = "DEVPORT: 이력서 면접 질문 생성기";
 
 export default class MyDocument extends Document {
