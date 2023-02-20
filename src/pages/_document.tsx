@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 const TITLE = "DEVPORT: 이력서 면접 질문 생성기";
 const DESCRIPTION = "이력서 기반 예상 면접 질문 제공 서비스입니다.";
@@ -116,6 +117,20 @@ export default class MyDocument extends Document {
           <meta name="twitter:image" content={IMAGE} />
           <meta name="twitter:image:alt" content={IMAGE_ALT} />
           <meta name="twitter:creator" content="@ova_sw" />
+
+          {/* <!-- Google tag (gtag.js) --> */}
+          <Script
+            strategy="afterInteractive"
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-5CQSX6VTQX"
+          ></Script>
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5CQSX6VTQX');`}
+          </Script>
         </Head>
         <body>
           <Main />
