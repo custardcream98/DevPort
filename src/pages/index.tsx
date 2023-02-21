@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Footer, InfoButton, ResumeForm, Toolbar } from "components";
 
@@ -28,9 +28,43 @@ export default function Home() {
   const audienceSelectRef = useRef<HTMLSelectElement>(null);
   const resumeFormRef = useRef<ResumeFormRef>(null);
 
+  const [cooldown, setCooldown] = useState<number>(0);
+  const isCooldownRunning = cooldown > 0;
+
+  const updateButtonText = useCallback(() => {
+    const resumeForm = resumeFormRef.current;
+    if (!resumeForm) {
+      return;
+    }
+
+    if (isCooldownRunning) {
+      resumeForm.generateButtonDisabled = true;
+      resumeForm.generateButtonText = `${cooldown}초 후에 다시 활성화됩니다.`;
+    } else {
+      resumeForm.generateButtonDisabled = false;
+      resumeForm.generateButtonText = "생성하기";
+    }
+  }, [cooldown, isCooldownRunning]);
+
+  useEffect(updateButtonText, [cooldown, isCooldownRunning]);
+
+  useEffect(() => {
+    if (isCooldownRunning) {
+      const interval = setInterval(() => {
+        setCooldown((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isCooldownRunning]);
+
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+
+      if (isCooldownRunning) {
+        return;
+      }
 
       const data: Record<string, unknown> = {};
       new FormData(event.currentTarget).forEach(
@@ -48,6 +82,13 @@ export default function Home() {
       }
 
       try {
+        const isNotEmpties = Object.values(data).some((value) => value !== "");
+        if (!isNotEmpties) {
+          setResponse("내용이 비어있습니다.");
+          return;
+        }
+
+        setCooldown(60);
         const response = await fetch("/api/query", {
           method: "POST",
           headers: {
@@ -65,6 +106,7 @@ export default function Home() {
         setResponse(result.response);
       } catch (error) {
         console.error(error);
+        setCooldown(0);
 
         if (isQueryResultTokenExceedError(error)) {
           const { tokens, max } = error;
@@ -77,7 +119,7 @@ export default function Home() {
         setResponse("질문 생성에 실패했습니다.");
       }
     },
-    [],
+    [cooldown, isCooldownRunning],
   );
 
   const handleFillTestData: React.MouseEventHandler<HTMLButtonElement> = (

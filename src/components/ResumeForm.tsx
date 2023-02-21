@@ -6,6 +6,8 @@ export type ResumeFormRef = {
   skills: string;
   experience: string;
   projects: string;
+  generateButtonDisabled: boolean;
+  generateButtonText: string;
 };
 
 type Props = {
@@ -17,6 +19,7 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(({ handleSubmit }, ref) => {
   const skillsRef = useRef<HTMLTextAreaElement>(null);
   const experienceRef = useRef<HTMLTextAreaElement>(null);
   const projectsRef = useRef<HTMLTextAreaElement>(null);
+  const generateButtonRef = useRef<HTMLButtonElement>(null);
 
   useImperativeHandle(
     ref,
@@ -44,6 +47,18 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(({ handleSubmit }, ref) => {
           throw new Error("No Element");
         }
         projectsRef.current.value = value;
+      },
+      set generateButtonDisabled(value: boolean) {
+        if (!generateButtonRef.current) {
+          throw new Error("No Element");
+        }
+        generateButtonRef.current.disabled = value;
+      },
+      set generateButtonText(value: string) {
+        if (!generateButtonRef.current) {
+          throw new Error("No Element");
+        }
+        generateButtonRef.current.innerText = value;
       },
     }),
     [],
@@ -79,7 +94,7 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(({ handleSubmit }, ref) => {
         placeholder="프로젝트"
         name="projects"
       />
-      <StyledButton>생성하기</StyledButton>
+      <StyledButton ref={generateButtonRef}>생성하기</StyledButton>
     </StyledForm>
   );
 });
@@ -100,6 +115,13 @@ const StyledButton = styled.button`
   transition: background-color 0.1s ease-in-out;
   :hover {
     background-color: #007272;
+  }
+
+  :disabled {
+    background-color: #00808081;
+  }
+  :disabled:hover {
+    background-color: #00808081;
   }
 `;
 const StyledForm = styled.form`
