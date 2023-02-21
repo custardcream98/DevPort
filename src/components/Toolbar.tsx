@@ -15,7 +15,7 @@ const Saperator = styled.div`
 const ShouldTranslateCheckbox = forwardRef<HTMLInputElement, {}>(
   function ShouldTranslateCheckboxForwarded(_, ref) {
     return (
-      <label>
+      <StyledLabel>
         <input
           ref={ref}
           type="checkbox"
@@ -24,10 +24,13 @@ const ShouldTranslateCheckbox = forwardRef<HTMLInputElement, {}>(
           defaultChecked
         />
         영문 번역 거치기
-      </label>
+      </StyledLabel>
     );
   },
 );
+const StyledLabel = styled.label`
+  word-break: keep-all;
+`;
 
 const Button = styled.button`
   display: inline-block;
@@ -36,6 +39,8 @@ const Button = styled.button`
   border-radius: 5px;
   color: white;
   font-weight: 500;
+
+  word-break: keep-all;
 
   transition: background-color 0.1s ease-in-out;
   :hover {
