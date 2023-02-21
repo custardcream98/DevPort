@@ -57,12 +57,22 @@ const InfoModal = ({ isOpened, toggleModal }: Props) => {
         >
           닫기
         </button>
-        <strong>⚠️ 유의사항</strong>
+        <strong>ℹ️ 참고사항</strong>
         <ul>
           <li>
-            MVP 버전으로, 불안정할 수 있습니다. (영문 번역 거치기 옵션은 거의
-            항상 켜주셔야 합니다.)
+            <code>테스트 데이터 입력</code> 버튼을 눌러 간단하게 시연해볼 수
+            있습니다. 바로 해보세요!
           </li>
+          <li>
+            더 빠르고 풍부한 응답을 위해 Google Cloud Translate API를 활용,
+            영문으로 번역 후 ChatGPT로 보내집니다. 이후 다시 응답을 한국어로
+            번역합니다. 따라서 내용이 일부 불확실할 수 있습니다. (영문 번역
+            거치기 옵션은 거의 항상 켜주셔야 합니다.)
+          </li>
+        </ul>
+        <strong>⚠️ 유의사항</strong>
+        <ul>
+          <li>MVP 버전으로, 불안정할 수 있습니다.</li>
           <li>
             지나친 사용이 계속된다면 배포가 중지될 수 있습니다. (OpenAI API에서
             제공하는 무료 크레딧의 한계로 인한 것으로, 양해 부탁드립니다 🥲)
@@ -87,6 +97,8 @@ const Dialog = styled.dialog`
   border-radius: 5px;
   border: 1px solid #ccc;
   padding: 1rem 2rem;
+
+  width: 80%;
 
   .close-button {
     position: absolute;
@@ -113,6 +125,18 @@ const Dialog = styled.dialog`
     line-height: 1.3;
     li {
       margin: 0.8rem 0;
+
+      code {
+        display: inline-block;
+
+        background-color: teal;
+        border-radius: 5px;
+        color: white;
+        font-weight: 500;
+
+        font-size: 0.8rem;
+        padding: 0.1rem 0.3rem;
+      }
     }
   }
 `;
