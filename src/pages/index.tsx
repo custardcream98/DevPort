@@ -1,13 +1,11 @@
 import styled from "@emotion/styled";
 import { useCallback, useRef, useState } from "react";
 
-import AudienceSelect from "components/AudienceSelect";
-import ResumeForm from "components/ResumeForm";
-import Footer from "components/Footer";
+import { Footer, InfoButton, ResumeForm, Toolbar } from "components";
 
 import testData from "fixture/testData";
 
-import type { ResumeFormRef } from "components/ResumeForm";
+import type { ResumeFormRef } from "components";
 import type {
   QueryResolvedResponse,
   QueryTokensCountExceededResponse,
@@ -109,24 +107,19 @@ export default function Home() {
     <>
       <Title>DEVPORT: 이력서 면접 질문 생성기</Title>
       <Layout>
-        <label>
-          <input
-            ref={shouldTranslateCheckboxRef}
-            type="checkbox"
-            name="translate"
-            id="translate"
-            defaultChecked
-          />
-          영문 번역 거치기
-        </label>
-        <StyledButton type="button" onClick={handleFillTestData}>
-          테스트 데이터 입력
-        </StyledButton>
-        <AudienceSelect ref={audienceSelectRef} />
+        <Toolbar.Wrapper>
+          <Toolbar.ShouldTranslateCheckbox ref={shouldTranslateCheckboxRef} />
+          <Toolbar.AudienceSelect ref={audienceSelectRef} />
+          <Toolbar.Saperator />
+          <Toolbar.Button type="button" onClick={handleFillTestData}>
+            테스트 데이터 입력
+          </Toolbar.Button>
+        </Toolbar.Wrapper>
         <ResumeForm ref={resumeFormRef} handleSubmit={handleSubmit} />
         {response && <StyledResultP>{response}</StyledResultP>}
       </Layout>
       <Footer />
+      <InfoButton />
     </>
   );
 }
@@ -153,18 +146,4 @@ const StyledResultP = styled.p`
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 1rem;
-`;
-const StyledButton = styled.button`
-  display: inline-block;
-  background-color: teal;
-  margin: 0.5rem;
-  padding: 0.4rem 0.6rem;
-  border-radius: 5px;
-  color: white;
-  font-weight: 500;
-
-  transition: background-color 0.1s ease-in-out;
-  :hover {
-    background-color: #007272;
-  }
 `;
