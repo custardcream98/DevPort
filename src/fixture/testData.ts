@@ -1,5 +1,5 @@
 const testData = {
-  audience: "Junior Frontend Developer",
+  audience: "Frontend Developer",
   introduce: `졸업작품 어플리케이션 개발에 매일 3시간만 자며 매달렸을 만큼 아무리 사소한 문제라도 시간이 얼마나 걸리든 꼭 해결해야 직성이 풀리는 성격입니다.
 
 효율적인 워크플로우를 추구합니다.
