@@ -1,8 +1,11 @@
-export type QueryRequestBody = {
+export type Query = {
   introduce: string;
   experience: string;
   skills: string;
   projects: string;
+};
+
+export type QueryRequestBody = Query & {
   shouldTranslate: boolean;
   audience: string;
 };

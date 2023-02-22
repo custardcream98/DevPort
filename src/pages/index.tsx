@@ -1,125 +1,103 @@
-import styled from "@emotion/styled";
 import { useCallback, useEffect, useRef, useState } from "react";
+import styled from "@emotion/styled";
 
 import { Footer, InfoButton, ResumeForm, Toolbar } from "components";
 
+import useTimer from "hooks/useTimer";
+import useResponseTextReducer, {
+  ResponseTextActionType,
+} from "hooks/useResponseTextReducer";
+import postQuery from "fetch/postQuery";
+import { isQueryResultTokenExceedError } from "utils/typeGuards";
+import { checkIfObjectIsNotEmpty, formDataToQuery } from "utils/objectHelpers";
 import testData from "fixture/testData";
 
 import type { ResumeFormRef } from "components";
-import type {
-  QueryResolvedResponse,
-  QueryTokensCountExceededResponse,
-} from "types/api";
+import type { QueryResolvedResponse } from "types/api";
 
-const isQueryResultTokenExceedError = (
-  error: unknown,
-): error is QueryTokensCountExceededResponse => {
-  if (typeof error === "object" && error !== null) {
-    if ("type" in error && error.type === "tokensCountExceeded") {
-      return true;
-    }
-  }
-  return false;
-};
+const TIMER = 60;
 
 export default function Home() {
-  const [response, setResponse] = useState("");
   const shouldTranslateCheckboxRef = useRef<HTMLInputElement>(null);
   const audienceSelectRef = useRef<HTMLSelectElement>(null);
   const resumeFormRef = useRef<ResumeFormRef>(null);
 
-  const [cooldown, setCooldown] = useState<number>(0);
-  const isCooldownRunning = cooldown > 0;
+  const { timer, isTimerRunning, startTimer, resetTimer } = useTimer(TIMER);
+  const { responseText, responseTextDispatcher } = useResponseTextReducer();
 
-  const updateButtonText = useCallback(() => {
+  useEffect(() => {
     const resumeForm = resumeFormRef.current;
     if (!resumeForm) {
       return;
     }
 
-    if (isCooldownRunning) {
+    if (isTimerRunning) {
       resumeForm.generateButtonDisabled = true;
-      resumeForm.generateButtonText = `${cooldown}초 후에 다시 활성화됩니다.`;
+      resumeForm.generateButtonText = `${timer}초 후에 다시 활성화됩니다.`;
     } else {
       resumeForm.generateButtonDisabled = false;
       resumeForm.generateButtonText = "생성하기";
     }
-  }, [cooldown, isCooldownRunning]);
-
-  useEffect(updateButtonText, [cooldown, isCooldownRunning]);
-
-  useEffect(() => {
-    if (isCooldownRunning) {
-      const interval = setInterval(() => {
-        setCooldown((prev) => prev - 1);
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [isCooldownRunning]);
+  }, [timer, isTimerRunning]);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      if (isCooldownRunning) {
+      if (isTimerRunning) {
         return;
       }
 
-      const data: Record<string, unknown> = {};
-      new FormData(event.currentTarget).forEach(
-        (value, key) => (data[key] = value),
-      );
+      const queryData = formDataToQuery(new FormData(event.currentTarget));
 
-      setResponse("질문을 생성하고 있습니다.");
+      responseTextDispatcher({ type: ResponseTextActionType.LOADING });
 
       const shouldTranslateCheckbox = shouldTranslateCheckboxRef.current;
       const audienceSelect = audienceSelectRef.current;
 
       if (!shouldTranslateCheckbox || !audienceSelect) {
-        setResponse("질문 생성에 실패했습니다.");
+        responseTextDispatcher({ type: ResponseTextActionType.REJECTED });
         return;
       }
 
       try {
-        const isNotEmpties = Object.values(data).some((value) => value !== "");
+        const isNotEmpties = checkIfObjectIsNotEmpty(queryData);
         if (!isNotEmpties) {
-          setResponse("내용이 비어있습니다.");
+          responseTextDispatcher({ type: ResponseTextActionType.NO_INPUT });
           return;
         }
 
-        setCooldown(60);
-        const response = await fetch("/api/query", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...data,
-            shouldTranslate: shouldTranslateCheckbox.checked,
-            audience: audienceSelect.value,
-          }),
+        startTimer();
+        const queryBody = {
+          ...queryData,
+          shouldTranslate: shouldTranslateCheckbox.checked,
+          audience: audienceSelect.value,
+        };
+
+        const result: QueryResolvedResponse = await postQuery(queryBody);
+
+        responseTextDispatcher({
+          type: ResponseTextActionType.RESOLVED,
+          response: result.response,
         });
-
-        const result: QueryResolvedResponse = await response.json();
-
-        setResponse(result.response);
       } catch (error) {
         console.error(error);
-        setCooldown(0);
+        resetTimer();
 
         if (isQueryResultTokenExceedError(error)) {
           const { tokens, max } = error;
-          setResponse(
-            `글자 수가 너무 많습니다.\n\n현재 토큰 수: ${tokens}\n최대 토큰 수: ${max}`,
-          );
+          responseTextDispatcher({
+            type: ResponseTextActionType.TOKENS_COUNT_EXCEEDED,
+            tokens,
+            max,
+          });
           return;
         }
 
-        setResponse("질문 생성에 실패했습니다.");
+        responseTextDispatcher({ type: ResponseTextActionType.REJECTED });
       }
     },
-    [cooldown, isCooldownRunning],
+    [isTimerRunning],
   );
 
   const handleFillTestData: React.MouseEventHandler<HTMLButtonElement> = (
@@ -158,7 +136,7 @@ export default function Home() {
           </Toolbar.Button>
         </Toolbar.Wrapper>
         <ResumeForm ref={resumeFormRef} handleSubmit={handleSubmit} />
-        {response && <StyledResultP>{response}</StyledResultP>}
+        {responseText && <StyledResultP>{responseText}</StyledResultP>}
       </Layout>
       <Footer />
       <InfoButton />
