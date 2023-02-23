@@ -2,6 +2,7 @@ import { forwardRef, useCallback, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 
 import useForwardRef from "hooks/useForwardRef";
+import Label from "./Label";
 
 const MIN_HEIGHT = 200;
 
@@ -23,23 +24,29 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const [textareaHeight, setTextareaHeight] = useState<number>(MIN_HEIGHT);
     const [isResizing, setIsResizing] = useState<boolean>(false);
 
-    const handleMouseDown: React.MouseEventHandler = useCallback((event) => {
-      setIsResizing(true);
-      event.preventDefault();
-    }, []);
+    const handleStartResize = useCallback(
+      (event: React.MouseEvent | React.TouchEvent) => {
+        setIsResizing(true);
+        event.preventDefault();
+      },
+      [],
+    );
 
-    const handleMouseUp = useCallback((event: MouseEvent) => {
+    const handleEndResize = useCallback((event: MouseEvent | TouchEvent) => {
       setIsResizing(false);
       event.preventDefault();
     }, []);
 
-    const handleMouseMove = useCallback(
-      (event: MouseEvent) => {
+    const handleResize = useCallback(
+      (event: MouseEvent | TouchEvent) => {
         if (!textareaRef) {
           return;
         }
         if (isResizing) {
-          const newHeight = event.pageY - textareaRef.current.offsetTop;
+          const pageY =
+            event instanceof MouseEvent ? event.pageY : event.touches[0].pageY;
+
+          const newHeight = pageY - textareaRef.current.offsetTop;
           setTextareaHeight(Math.max(newHeight, MIN_HEIGHT));
           event.preventDefault();
         }
@@ -48,17 +55,21 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     );
 
     useEffect(() => {
-      window.addEventListener("mouseup", handleMouseUp);
-      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleEndResize);
+      window.addEventListener("touchend", handleEndResize);
+      window.addEventListener("mousemove", handleResize);
+      window.addEventListener("touchmove", handleResize);
       return () => {
-        window.removeEventListener("mouseup", handleMouseUp);
-        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleEndResize);
+        window.removeEventListener("touchend", handleEndResize);
+        window.removeEventListener("mousemove", handleResize);
+        window.removeEventListener("touchmove", handleResize);
       };
-    }, [isResizing, textareaHeight]);
+    }, [handleEndResize, handleResize]);
 
     return (
       <>
-        <StyledLabel htmlFor={name}>{label}</StyledLabel>
+        <Label htmlFor={name}>{label}</Label>
         <StyledTextareaWrapper>
           <StyledTextarea
             id={name}
@@ -68,7 +79,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             required={required}
             textareaHeight={textareaHeight}
           />
-          <StyledTextareaHandle onMouseDown={handleMouseDown}>
+          <StyledTextareaHandle
+            onMouseDown={handleStartResize}
+            onTouchStart={handleStartResize}
+          >
             <span className="sr-only">{label} 입력란 크기 조절 핸들</span>
           </StyledTextareaHandle>
         </StyledTextareaWrapper>
@@ -77,12 +91,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   },
 );
 
-const StyledLabel = styled.label`
-  display: block;
-  margin: 1rem 0 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-`;
 const StyledTextareaWrapper = styled.div`
   width: 100%;
   border-radius: 5px;
@@ -99,6 +107,7 @@ const StyledTextareaHandle = styled.button`
   background-color: #f0f0f0;
 
   cursor: ns-resize;
+  touch-action: none;
 
   ::before {
     content: "";
