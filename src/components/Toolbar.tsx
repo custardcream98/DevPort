@@ -7,6 +7,8 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+
+  flex-wrap: wrap;
 `;
 const Saperator = styled.div`
   flex: 1;
