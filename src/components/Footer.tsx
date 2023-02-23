@@ -30,6 +30,7 @@ const Footer = () => {
 const StyledFooter = styled.footer`
   text-align: center;
   color: #707070;
+  margin-bottom: 2rem;
 
   .address-list {
     display: flex;

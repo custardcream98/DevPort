@@ -162,6 +162,19 @@ const globalStyle = css`
     font-size: inherit;
     font-family: inherit;
   }
+
+  /* sr */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 `;
 
 const TITLE = "DEVPORT: 이력서 면접 질문 생성기";

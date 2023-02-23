@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { forwardRef, useImperativeHandle, useRef } from "react";
+import Textarea from "./Textarea";
 
 export type ResumeFormRef = {
   introduce: string;
@@ -66,33 +67,33 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(({ handleSubmit }, ref) => {
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <StyledLabel htmlFor="introduce">자기소개</StyledLabel>
-      <StyledTextArea
-        id="introduce"
+      <Textarea
         ref={introduceRef}
         placeholder="자기소개"
+        label="자기소개"
         name="introduce"
+        required
       />
-      <StyledLabel htmlFor="skills">기술</StyledLabel>
-      <StyledTextArea
-        id="skills"
+      <Textarea
         ref={skillsRef}
-        placeholder="기술"
+        placeholder="보유 기술"
+        label="보유 기술"
         name="skills"
+        required
       />
-      <StyledLabel htmlFor="experience">경력</StyledLabel>
-      <StyledTextArea
-        id="experience"
+      <Textarea
         ref={experienceRef}
         placeholder="경력"
+        label="경력"
         name="experience"
+        required
       />
-      <StyledLabel htmlFor="projects">프로젝트</StyledLabel>
-      <StyledTextArea
-        id="projects"
+      <Textarea
         ref={projectsRef}
         placeholder="프로젝트"
+        label="프로젝트"
         name="projects"
+        required
       />
       <StyledButton ref={generateButtonRef}>생성하기</StyledButton>
     </StyledForm>
@@ -126,23 +127,6 @@ const StyledButton = styled.button`
 `;
 const StyledForm = styled.form`
   width: 100%;
-`;
-const StyledLabel = styled.label`
-  display: block;
-  margin: 1rem 0 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-`;
-const StyledTextArea = styled.textarea`
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.4rem 0.6rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  resize: vertical;
 `;
 
 export default ResumeForm;

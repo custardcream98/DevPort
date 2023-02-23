@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 
 import { Footer, InfoButton, ResumeForm, Toolbar } from "components";
@@ -13,7 +13,7 @@ import { checkIfObjectIsNotEmpty, formDataToQuery } from "utils/objectHelpers";
 import testData from "fixture/testData";
 
 import type { ResumeFormRef } from "components";
-import type { QueryResolvedResponse } from "types/api";
+import type { QueryRequestBody, QueryResolvedResponse } from "types/api";
 
 const TIMER = 60;
 
@@ -61,14 +61,14 @@ export default function Home() {
       }
 
       try {
-        const isNotEmpties = checkIfObjectIsNotEmpty(queryData);
-        if (!isNotEmpties) {
+        const isNotEmpty = checkIfObjectIsNotEmpty(queryData);
+        if (!isNotEmpty) {
           responseTextDispatcher({ type: ResponseTextActionType.NO_INPUT });
           return;
         }
 
         startTimer();
-        const queryBody = {
+        const queryBody: QueryRequestBody = {
           ...queryData,
           shouldTranslate: shouldTranslateCheckbox.checked,
           audience: audienceSelect.value,
@@ -145,13 +145,21 @@ export default function Home() {
 }
 
 const Title = styled.h1`
-  margin: 2rem 0 1rem;
+  margin: 2rem;
   font-size: 2rem;
   font-weight: 600;
   text-align: center;
+
+  word-break: keep-all;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 const Layout = styled.main`
   padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 const StyledResultP = styled.p`
