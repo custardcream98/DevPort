@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
 
 import useForwardRef from "hooks/useForwardRef";
@@ -20,36 +20,31 @@ type StyledTextareaProps = {
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, name, placeholder, required }, ref) => {
     const textareaRef = useForwardRef<HTMLTextAreaElement>(ref);
+    const handleRef = useRef<HTMLButtonElement>(null);
 
     const [textareaHeight, setTextareaHeight] = useState<number>(MIN_HEIGHT);
     const [isResizing, setIsResizing] = useState<boolean>(false);
 
-    const handleStartResize = useCallback(
-      (event: React.MouseEvent | React.TouchEvent) => {
-        setIsResizing(true);
-        event.preventDefault();
-      },
-      [],
-    );
+    const handleStartResize = useCallback(() => {
+      setIsResizing(true);
+    }, []);
 
-    const handleEndResize = useCallback((event: MouseEvent | TouchEvent) => {
+    const handleEndResize = useCallback(() => {
       setIsResizing(false);
-      event.preventDefault();
     }, []);
 
     const handleResize = useCallback(
       (event: MouseEvent | TouchEvent) => {
-        if (!textareaRef) {
+        if (!textareaRef || !isResizing) {
           return;
         }
-        if (isResizing) {
-          const pageY =
-            event instanceof MouseEvent ? event.pageY : event.touches[0].pageY;
 
-          const newHeight = pageY - textareaRef.current.offsetTop;
-          setTextareaHeight(Math.max(newHeight, MIN_HEIGHT));
-          event.preventDefault();
-        }
+        const pageY =
+          event instanceof MouseEvent ? event.pageY : event.touches[0].pageY;
+
+        const newHeight = pageY - textareaRef.current.offsetTop;
+        setTextareaHeight(Math.max(newHeight, MIN_HEIGHT));
+        event.preventDefault();
       },
       [textareaRef, isResizing],
     );
@@ -58,7 +53,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       window.addEventListener("mouseup", handleEndResize);
       window.addEventListener("touchend", handleEndResize);
       window.addEventListener("mousemove", handleResize);
-      window.addEventListener("touchmove", handleResize);
+      window.addEventListener("touchmove", handleResize, { passive: false });
       return () => {
         window.removeEventListener("mouseup", handleEndResize);
         window.removeEventListener("touchend", handleEndResize);
@@ -80,6 +75,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             textareaHeight={textareaHeight}
           />
           <StyledTextareaHandle
+            ref={handleRef}
             onMouseDown={handleStartResize}
             onTouchStart={handleStartResize}
           >
@@ -107,7 +103,6 @@ const StyledTextareaHandle = styled.button`
   background-color: #f0f0f0;
 
   cursor: ns-resize;
-  touch-action: none;
 
   ::before {
     content: "";
@@ -117,6 +112,9 @@ const StyledTextareaHandle = styled.button`
     background-color: #ccc;
     display: block;
     margin: 0 auto;
+  }
+  @media (max-width: 768px) {
+    height: 15px;
   }
 `;
 const StyledTextarea = styled.textarea<StyledTextareaProps>`
