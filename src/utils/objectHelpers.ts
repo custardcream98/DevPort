@@ -1,4 +1,4 @@
-import { isQuery, isString } from "./typeGuards";
+import { isQueryRequestBody, isString } from "./typeGuards";
 
 const formDataToObject = (formData: FormData) => {
   const data: Record<string, string> = {};
@@ -8,10 +8,15 @@ const formDataToObject = (formData: FormData) => {
   return data;
 };
 
-const formDataToQuery = (formData: FormData) => {
+const formDataToQueryRequestBody = (formData: FormData) => {
   const queryData = formDataToObject(formData);
 
-  if (isQuery(queryData)) return queryData;
+  const queryBody = {
+    ...queryData,
+    shouldTranslate: queryData.shouldTranslate === "on",
+  };
+
+  if (isQueryRequestBody(queryBody)) return queryBody;
 
   throw new Error("formDataToQuery: formData is not a query");
 };
@@ -20,4 +25,8 @@ const checkIfObjectIsNotEmpty = (obj: Record<string, unknown>) => {
   return Object.values(obj).some((value) => !!value);
 };
 
-export { formDataToObject, checkIfObjectIsNotEmpty, formDataToQuery };
+export {
+  formDataToObject,
+  checkIfObjectIsNotEmpty,
+  formDataToQueryRequestBody,
+};

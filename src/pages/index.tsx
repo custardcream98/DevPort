@@ -9,17 +9,19 @@ import useResponseTextReducer, {
 } from "hooks/useResponseTextReducer";
 import postQuery from "fetch/postQuery";
 import { isQueryResultTokenExceedError } from "utils/typeGuards";
-import { checkIfObjectIsNotEmpty, formDataToQuery } from "utils/objectHelpers";
+import {
+  checkIfObjectIsNotEmpty,
+  formDataToQueryRequestBody,
+} from "utils/objectHelpers";
 import testData from "fixture/testData";
 
 import type { ResumeFormRef } from "components";
-import type { QueryRequestBody, QueryResolvedResponse } from "types/api";
+import type { QueryResolvedResponse } from "types/api";
 
 const TIMER = 60;
 
 export default function Home() {
   const shouldTranslateCheckboxRef = useRef<HTMLInputElement>(null);
-  const audienceSelectRef = useRef<HTMLSelectElement>(null);
   const resumeFormRef = useRef<ResumeFormRef>(null);
 
   const { timer, isTimerRunning, startTimer, resetTimer } = useTimer(TIMER);
@@ -48,17 +50,13 @@ export default function Home() {
         return;
       }
 
-      const queryData = formDataToQuery(new FormData(event.currentTarget));
+      const queryData = formDataToQueryRequestBody(
+        new FormData(event.currentTarget),
+      );
+
+      console.log(queryData);
 
       responseTextDispatcher({ type: ResponseTextActionType.LOADING });
-
-      const shouldTranslateCheckbox = shouldTranslateCheckboxRef.current;
-      const audienceSelect = audienceSelectRef.current;
-
-      if (!shouldTranslateCheckbox || !audienceSelect) {
-        responseTextDispatcher({ type: ResponseTextActionType.REJECTED });
-        return;
-      }
 
       try {
         const isNotEmpty = checkIfObjectIsNotEmpty(queryData);
@@ -68,13 +66,8 @@ export default function Home() {
         }
 
         startTimer();
-        const queryBody: QueryRequestBody = {
-          ...queryData,
-          shouldTranslate: shouldTranslateCheckbox.checked,
-          audience: audienceSelect.value,
-        };
 
-        const result: QueryResolvedResponse = await postQuery(queryBody);
+        const result: QueryResolvedResponse = await postQuery(queryData);
 
         responseTextDispatcher({
           type: ResponseTextActionType.RESOLVED,
@@ -106,9 +99,8 @@ export default function Home() {
     event.preventDefault();
 
     const resumeForm = resumeFormRef.current;
-    const audienceSelect = audienceSelectRef.current;
 
-    if (!resumeForm || !audienceSelect) {
+    if (!resumeForm) {
       return;
     }
 
@@ -120,22 +112,33 @@ export default function Home() {
 
     resumeForm.projects = testData.projects;
 
-    audienceSelect.value = testData.audience;
+    resumeForm.audience = testData.audience;
   };
 
   return (
     <>
-      <Title>DEVPORT: 이력서 면접 질문 생성기</Title>
+      <Title>
+        DEVPORT: 이력서 <span className="line-break">면접 질문 생성기</span>
+      </Title>
       <Layout>
         <Toolbar.Wrapper>
-          <Toolbar.ShouldTranslateCheckbox ref={shouldTranslateCheckboxRef} />
-          <Toolbar.AudienceSelect ref={audienceSelectRef} />
+          <Toolbar.ShouldTranslateCheckbox
+            ref={shouldTranslateCheckboxRef}
+            type="checkbox"
+            name="shouldTranslate"
+            form="resumeForm"
+            defaultChecked
+          />
           <Toolbar.Saperator />
           <Toolbar.Button type="button" onClick={handleFillTestData}>
             테스트 데이터 입력
           </Toolbar.Button>
         </Toolbar.Wrapper>
-        <ResumeForm ref={resumeFormRef} handleSubmit={handleSubmit} />
+        <ResumeForm
+          id="resumeForm"
+          ref={resumeFormRef}
+          handleSubmit={handleSubmit}
+        />
         {responseText && <StyledResultP>{responseText}</StyledResultP>}
       </Layout>
       <Footer />
@@ -154,6 +157,10 @@ const Title = styled.h1`
 
   @media (max-width: 768px) {
     font-size: 1.5rem;
+    .line-break {
+      display: block;
+      margin-top: 0.3rem;
+    }
   }
 `;
 const Layout = styled.main`

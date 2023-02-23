@@ -1,8 +1,15 @@
 import styled from "@emotion/styled";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import {
+  ComponentPropsWithoutRef,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+} from "react";
+import Input from "./Input";
 import Textarea from "./Textarea";
 
 export type ResumeFormRef = {
+  audience: string;
   introduce: string;
   skills: string;
   experience: string;
@@ -13,92 +20,108 @@ export type ResumeFormRef = {
 
 type Props = {
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
-};
+} & ComponentPropsWithoutRef<"form">;
 
-const ResumeForm = forwardRef<ResumeFormRef, Props>(({ handleSubmit }, ref) => {
-  const introduceRef = useRef<HTMLTextAreaElement>(null);
-  const skillsRef = useRef<HTMLTextAreaElement>(null);
-  const experienceRef = useRef<HTMLTextAreaElement>(null);
-  const projectsRef = useRef<HTMLTextAreaElement>(null);
-  const generateButtonRef = useRef<HTMLButtonElement>(null);
+const ResumeForm = forwardRef<ResumeFormRef, Props>(
+  ({ handleSubmit, ...props }, ref) => {
+    const introduceRef = useRef<HTMLTextAreaElement>(null);
+    const skillsRef = useRef<HTMLTextAreaElement>(null);
+    const experienceRef = useRef<HTMLTextAreaElement>(null);
+    const projectsRef = useRef<HTMLTextAreaElement>(null);
+    const generateButtonRef = useRef<HTMLButtonElement>(null);
+    const audienceInputRef = useRef<HTMLInputElement>(null);
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      set introduce(value: string) {
-        if (!introduceRef.current) {
-          throw new Error("No Element");
-        }
-        introduceRef.current.value = value;
-      },
-      set skills(value: string) {
-        if (!skillsRef.current) {
-          throw new Error("No Element");
-        }
-        skillsRef.current.value = value;
-      },
-      set experience(value: string) {
-        if (!experienceRef.current) {
-          throw new Error("No Element");
-        }
-        experienceRef.current.value = value;
-      },
-      set projects(value: string) {
-        if (!projectsRef.current) {
-          throw new Error("No Element");
-        }
-        projectsRef.current.value = value;
-      },
-      set generateButtonDisabled(value: boolean) {
-        if (!generateButtonRef.current) {
-          throw new Error("No Element");
-        }
-        generateButtonRef.current.disabled = value;
-      },
-      set generateButtonText(value: string) {
-        if (!generateButtonRef.current) {
-          throw new Error("No Element");
-        }
-        generateButtonRef.current.innerText = value;
-      },
-    }),
-    [],
-  );
+    useImperativeHandle(
+      ref,
+      () => ({
+        set audience(value: string) {
+          if (!audienceInputRef.current) {
+            throw new Error("No Element");
+          }
+          audienceInputRef.current.value = value;
+        },
+        set introduce(value: string) {
+          if (!introduceRef.current) {
+            throw new Error("No Element");
+          }
+          introduceRef.current.value = value;
+        },
+        set skills(value: string) {
+          if (!skillsRef.current) {
+            throw new Error("No Element");
+          }
+          skillsRef.current.value = value;
+        },
+        set experience(value: string) {
+          if (!experienceRef.current) {
+            throw new Error("No Element");
+          }
+          experienceRef.current.value = value;
+        },
+        set projects(value: string) {
+          if (!projectsRef.current) {
+            throw new Error("No Element");
+          }
+          projectsRef.current.value = value;
+        },
+        set generateButtonDisabled(value: boolean) {
+          if (!generateButtonRef.current) {
+            throw new Error("No Element");
+          }
+          generateButtonRef.current.disabled = value;
+        },
+        set generateButtonText(value: string) {
+          if (!generateButtonRef.current) {
+            throw new Error("No Element");
+          }
+          generateButtonRef.current.innerText = value;
+        },
+      }),
+      [],
+    );
 
-  return (
-    <StyledForm onSubmit={handleSubmit}>
-      <Textarea
-        ref={introduceRef}
-        placeholder="자기소개"
-        label="자기소개"
-        name="introduce"
-        required
-      />
-      <Textarea
-        ref={skillsRef}
-        placeholder="보유 기술"
-        label="보유 기술"
-        name="skills"
-        required
-      />
-      <Textarea
-        ref={experienceRef}
-        placeholder="경력"
-        label="경력"
-        name="experience"
-        required
-      />
-      <Textarea
-        ref={projectsRef}
-        placeholder="프로젝트"
-        label="프로젝트"
-        name="projects"
-        required
-      />
-      <StyledButton ref={generateButtonRef}>생성하기</StyledButton>
-    </StyledForm>
-  );
-});
+    return (
+      <StyledForm onSubmit={handleSubmit} {...props}>
+        <Input
+          ref={audienceInputRef}
+          type="text"
+          name="audience"
+          label="직업"
+          required
+        />
+        <Textarea
+          ref={introduceRef}
+          placeholder="자기소개"
+          label="자기소개"
+          name="introduce"
+          required
+        />
+        <Textarea
+          ref={skillsRef}
+          placeholder="보유 기술"
+          label="보유 기술"
+          name="skills"
+          required
+        />
+        <Textarea
+          ref={experienceRef}
+          placeholder="경력"
+          label="경력"
+          name="experience"
+          required
+        />
+        <Textarea
+          ref={projectsRef}
+          placeholder="프로젝트"
+          label="프로젝트"
+          name="projects"
+          required
+        />
+        <StyledButton ref={generateButtonRef}>생성하기</StyledButton>
+      </StyledForm>
+    );
+  },
+);
 
 const StyledButton = styled.button`
   display: block;

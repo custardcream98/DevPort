@@ -1,7 +1,5 @@
 import styled from "@emotion/styled";
-import { forwardRef } from "react";
-
-import AudienceSelect from "./AudienceSelect";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,22 +12,17 @@ const Saperator = styled.div`
   flex: 1;
 `;
 
-const ShouldTranslateCheckbox = forwardRef<HTMLInputElement, {}>(
-  function ShouldTranslateCheckboxForwarded(_, ref) {
-    return (
-      <StyledLabel>
-        <input
-          ref={ref}
-          type="checkbox"
-          name="translate"
-          id="translate"
-          defaultChecked
-        />
-        영문 번역 거치기
-      </StyledLabel>
-    );
-  },
-);
+const ShouldTranslateCheckbox = forwardRef<
+  HTMLInputElement,
+  ComponentPropsWithoutRef<"input">
+>(function ShouldTranslateCheckboxForwarded(props, ref) {
+  return (
+    <StyledLabel>
+      <input ref={ref} {...props} />
+      영문 번역 거치기
+    </StyledLabel>
+  );
+});
 const StyledLabel = styled.label`
   word-break: keep-all;
 `;
@@ -55,7 +48,6 @@ const Toolbar = {
   Saperator,
   ShouldTranslateCheckbox,
   Button,
-  AudienceSelect,
 };
 
 export default Toolbar;

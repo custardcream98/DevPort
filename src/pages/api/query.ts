@@ -78,8 +78,9 @@ export default async function handler(
     }
   }
 
-  const [introduceEng, experienceEng, skillsEng, projectsEng] =
+  const [audienceEng, introduceEng, experienceEng, skillsEng, projectsEng] =
     await Promise.all([
+      translateKoToEn(audience),
       translateKoToEn(introduce),
       translateKoToEn(experience),
       translateKoToEn(skills),
@@ -87,7 +88,7 @@ export default async function handler(
     ]);
 
   const prompt = promptTemplate(
-    audience,
+    audienceEng,
     introduceEng,
     experienceEng,
     skillsEng,
