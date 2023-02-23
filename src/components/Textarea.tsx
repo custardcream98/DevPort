@@ -130,8 +130,6 @@ const StyledTextarea = styled.textarea<StyledTextareaProps>`
   resize: none;
   min-height: 200px;
   height: ${({ textareaHeight }) => textareaHeight}px;
-
-  font-family: "sans-serif";
 `;
 
 export default Textarea;

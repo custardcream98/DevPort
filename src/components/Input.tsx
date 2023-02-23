@@ -30,8 +30,6 @@ const StyledInput = styled.input`
   font-size: 1rem;
 
   width: 100%;
-
-  font-family: "sans-serif";
 `;
 
 export default Input;

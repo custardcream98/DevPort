@@ -157,6 +157,8 @@ const globalStyle = css`
     list-style: none;
   }
 
+  input,
+  textarea,
   input::placeholder,
   textarea::placeholder {
     font-size: inherit;
@@ -174,6 +176,10 @@ const globalStyle = css`
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
 `;
 
