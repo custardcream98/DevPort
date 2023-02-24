@@ -144,7 +144,6 @@ const globalStyle = css`
   select,
   input[type="checkbox"],
   input[type="radio"],
-  label,
   button {
     cursor: pointer;
   }

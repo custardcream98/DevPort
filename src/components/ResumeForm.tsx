@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
+import Line from "./Line";
 import Input from "./Input";
 import Textarea from "./Textarea";
 
@@ -90,6 +91,7 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(
           placeholder="원하는 직업을 적어주세요."
           required
         />
+        <Line />
         <Textarea
           ref={introduceRef}
           placeholder="자기소개를 적어주세요. "

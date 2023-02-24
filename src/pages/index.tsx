@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 
-import { Footer, InfoButton, ResumeForm, Toolbar } from "components";
+import { Footer, InfoButton, Line, ResumeForm, Toolbar } from "components";
 
 import useTimer from "hooks/useTimer";
 import useResponseTextReducer, {
@@ -139,6 +139,7 @@ export default function Home() {
           ref={resumeFormRef}
           handleSubmit={handleSubmit}
         />
+        <Line />
         {responseText && <StyledResultP>{responseText}</StyledResultP>}
       </Layout>
       <Footer />
