@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import styled from "@emotion/styled";
 
 import {
@@ -7,6 +7,7 @@ import {
   Line,
   ResultDisplayer,
   ResumeForm,
+  TimerButton,
   Toolbar,
 } from "components";
 
@@ -29,34 +30,20 @@ import type { QueryResolvedResponse } from "types/api";
 const TIMER = 60;
 
 export default function Home() {
+  const { response, responseDispatcher } = useResponseReducer();
+
   const shouldTranslateCheckboxRef = useRef<HTMLInputElement>(null);
   const resumeFormRef = useRef<ResumeFormRef>(null);
 
-  const { timer, isTimerRunning, startTimer, resetTimer } = useTimer(TIMER);
-  const { response, responseDispatcher } = useResponseReducer();
-
-  useEffect(() => {
-    const resumeForm = resumeFormRef.current;
-    if (!resumeForm) {
-      return;
-    }
-
-    if (isTimerRunning) {
-      resumeForm.generateButtonDisabled = true;
-      resumeForm.generateButtonText = `${timer}초 후에 다시 활성화됩니다.`;
-    } else {
-      resumeForm.generateButtonDisabled = false;
-      resumeForm.generateButtonText = "생성하기";
-    }
-  }, [timer, isTimerRunning]);
+  const { timer } = useTimer({
+    maxTime: TIMER,
+    startCondition: response.status === ResponseStateType.LOADING,
+    resetCondition: response.status === ResponseStateType.REJECTED,
+  });
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-
-      if (isTimerRunning) {
-        return;
-      }
 
       const queryData = formDataToQueryRequestBody(
         new FormData(event.currentTarget),
@@ -64,32 +51,29 @@ export default function Home() {
 
       responseDispatcher({ type: ResponseActionType.LOADING });
 
+      const isNotEmpty = checkIfObjectIsNotEmpty({
+        introduce: queryData.introduce,
+        skills: queryData.skills,
+        experience: queryData.experience,
+        projects: queryData.projects,
+      });
+      if (!isNotEmpty) {
+        responseDispatcher({ type: ResponseActionType.NO_INPUT });
+        return;
+      }
+
       try {
-        const objectForEmptyCheck = {
-          introduce: queryData.introduce,
-          skills: queryData.skills,
-          experience: queryData.experience,
-          projects: queryData.projects,
-        };
-
-        const isNotEmpty = checkIfObjectIsNotEmpty(objectForEmptyCheck);
-        if (!isNotEmpty) {
-          responseDispatcher({ type: ResponseActionType.NO_INPUT });
-          return;
-        }
-
-        startTimer();
-
-        const result: QueryResolvedResponse = await postQuery(queryData);
+        const {
+          response: { korean, english },
+        }: QueryResolvedResponse = await postQuery(queryData);
 
         responseDispatcher({
           type: ResponseActionType.RESOLVED,
-          korean: result.response.korean,
-          english: result.response.english,
+          korean,
+          english,
         });
       } catch (error) {
         console.error(error);
-        resetTimer();
 
         if (isQueryResultTokenExceedError(error)) {
           const { tokens, max } = error;
@@ -104,7 +88,7 @@ export default function Home() {
         responseDispatcher({ type: ResponseActionType.REJECTED });
       }
     },
-    [isTimerRunning],
+    [],
   );
 
   const handleFillTestData: React.MouseEventHandler<HTMLButtonElement> = (
@@ -118,15 +102,7 @@ export default function Home() {
       return;
     }
 
-    resumeForm.introduce = testData.introduce;
-
-    resumeForm.skills = testData.skills;
-
-    resumeForm.experience = testData.experience;
-
-    resumeForm.projects = testData.projects;
-
-    resumeForm.audience = testData.audience;
+    resumeForm.fill(testData);
 
     shouldTranslateCheckboxRef.current.checked = true;
   };
@@ -155,6 +131,9 @@ export default function Home() {
           ref={resumeFormRef}
           handleSubmit={handleSubmit}
         />
+        <TimerButton timer={timer} type="submit" form="resumeForm">
+          생성하기
+        </TimerButton>
         <Line />
         <ResultDisplayer {...response} />
       </Layout>

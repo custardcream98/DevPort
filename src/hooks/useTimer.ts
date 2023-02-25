@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 
-const useTimer = (maxTime: number) => {
+type Timer = {
+  maxTime: number;
+  startCondition?: boolean;
+  resetCondition?: boolean;
+};
+
+const useTimer = ({ maxTime, startCondition, resetCondition }: Timer) => {
   const [timer, setTimer] = useState<number>(0);
   const isTimerRunning = timer > 0;
 
@@ -21,6 +27,18 @@ const useTimer = (maxTime: number) => {
   const resetTimer = useCallback(() => {
     setTimer(0);
   }, []);
+
+  useEffect(() => {
+    if (startCondition) {
+      startTimer();
+    }
+  }, [startCondition, startTimer]);
+
+  useEffect(() => {
+    if (resetCondition) {
+      resetTimer();
+    }
+  }, [resetCondition, resetTimer]);
 
   return { timer, isTimerRunning, startTimer, resetTimer };
 };

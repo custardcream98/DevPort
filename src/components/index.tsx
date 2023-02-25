@@ -7,5 +7,6 @@ export { default as Line } from "./Line";
 export { default as Input } from "./Input";
 export { default as Textarea } from "./Textarea";
 export { default as ResultDisplayer } from "./ResultDisplayer";
+export { default as TimerButton } from "./TimerButton";
 
 export * from "./ResumeForm";

@@ -1,22 +1,14 @@
 import styled from "@emotion/styled";
-import {
-  ComponentPropsWithoutRef,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import Line from "./Line";
 import Input from "./Input";
 import Textarea from "./Textarea";
 
+import type { ComponentPropsWithoutRef } from "react";
+import type { QueryPrompt } from "types/prompt";
+
 export type ResumeFormRef = {
-  audience: string;
-  introduce: string;
-  skills: string;
-  experience: string;
-  projects: string;
-  generateButtonDisabled: boolean;
-  generateButtonText: string;
+  fill: (data: Required<QueryPrompt>) => void;
 };
 
 type Props = {
@@ -29,53 +21,33 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(
     const skillsRef = useRef<HTMLTextAreaElement>(null);
     const experienceRef = useRef<HTMLTextAreaElement>(null);
     const projectsRef = useRef<HTMLTextAreaElement>(null);
-    const generateButtonRef = useRef<HTMLButtonElement>(null);
     const audienceInputRef = useRef<HTMLInputElement>(null);
 
     useImperativeHandle(
       ref,
       () => ({
-        set audience(value: string) {
-          if (!audienceInputRef.current) {
+        fill({
+          introduce,
+          skills,
+          experience,
+          projects,
+          audience,
+        }: Required<QueryPrompt>) {
+          if (
+            !audienceInputRef.current ||
+            !introduceRef.current ||
+            !skillsRef.current ||
+            !experienceRef.current ||
+            !projectsRef.current
+          ) {
             throw new Error("No Element");
           }
-          audienceInputRef.current.value = value;
-        },
-        set introduce(value: string) {
-          if (!introduceRef.current) {
-            throw new Error("No Element");
-          }
-          introduceRef.current.value = value;
-        },
-        set skills(value: string) {
-          if (!skillsRef.current) {
-            throw new Error("No Element");
-          }
-          skillsRef.current.value = value;
-        },
-        set experience(value: string) {
-          if (!experienceRef.current) {
-            throw new Error("No Element");
-          }
-          experienceRef.current.value = value;
-        },
-        set projects(value: string) {
-          if (!projectsRef.current) {
-            throw new Error("No Element");
-          }
-          projectsRef.current.value = value;
-        },
-        set generateButtonDisabled(value: boolean) {
-          if (!generateButtonRef.current) {
-            throw new Error("No Element");
-          }
-          generateButtonRef.current.disabled = value;
-        },
-        set generateButtonText(value: string) {
-          if (!generateButtonRef.current) {
-            throw new Error("No Element");
-          }
-          generateButtonRef.current.innerText = value;
+
+          audienceInputRef.current.value = introduce;
+          introduceRef.current.value = skills;
+          skillsRef.current.value = experience;
+          experienceRef.current.value = projects;
+          projectsRef.current.value = audience;
         },
       }),
       [],
@@ -116,37 +88,11 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(
           label="프로젝트"
           name="projects"
         />
-        <StyledButton ref={generateButtonRef}>생성하기</StyledButton>
       </StyledForm>
     );
   },
 );
 
-const StyledButton = styled.button`
-  display: block;
-  background-color: teal;
-  border-radius: 5px;
-  color: white;
-  font-weight: 500;
-
-  font-size: 1.5rem;
-  margin: 1rem 0 2rem;
-  padding: 0.8rem 0;
-
-  width: 100%;
-
-  transition: background-color 0.1s ease-in-out;
-  :hover {
-    background-color: #007272;
-  }
-
-  :disabled {
-    background-color: #00808081;
-  }
-  :disabled:hover {
-    background-color: #00808081;
-  }
-`;
 const StyledForm = styled.form`
   width: 100%;
 `;
