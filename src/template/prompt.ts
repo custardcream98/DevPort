@@ -1,10 +1,12 @@
-const promptTemplate = (
-  audience: string,
-  introduce: string,
-  experience: string,
-  skills: string,
-  projects: string,
-) => `You're a hiring manager looking for a new ${audience} to join your team. Using the information below, generate interview questions based on the resume that will help you assess the candidate's qualifications and fit for the role.
+import type { QueryPrompt } from "types/prompt";
+
+const promptTemplate = ({
+  audience,
+  introduce,
+  experience,
+  skills,
+  projects,
+}: QueryPrompt) => `You're a hiring manager looking for a new ${audience} to join your team. Using the information below, generate interview questions based on the resume that will help you assess the candidate's qualifications and fit for the role.
 
 Instructions:
 - Format: Markdown
@@ -23,15 +25,19 @@ ${
 }
 
 Resume Information:
-- Introduce: [Candidate's self-introduction]
-- Experience: [Number of years of experience, previous roles and responsibilities]
-- Skills: [Skills and other relevant abilities]
-- Projects: [Noteworthy projects and contributions]
+${introduce ? "- Introduce: [Candidate's self-introduction]" : ""}
+${
+  experience
+    ? "- Experience: [Number of years of experience, previous roles and responsibilities]"
+    : ""
+}
+${skills ? "- Skills: [Skills and other relevant abilities]" : ""}
+${projects ? "- Projects: [Noteworthy projects and contributions]" : ""}
 
 Resume:
-- Introduce: ${introduce}
-- Experience: ${experience}
-- Skills: ${skills}
-- Projects: ${projects}`;
+${introduce ? `- Introduce: ${introduce}` : ""}
+${experience ? `- Experience: ${experience}` : ""}
+${skills ? `- Skills: ${skills}` : ""}
+${projects ? `- Projects: ${projects}` : ""}`;
 
 export { promptTemplate };

@@ -12,7 +12,19 @@ const formDataToQueryRequestBody = (formData: FormData) => {
   const queryData = formDataToObject(formData);
 
   const queryBody = {
-    ...queryData,
+    audience: queryData.audience,
+    introduce:
+      queryData["introduce-checkbox"] === "on"
+        ? queryData.introduce
+        : undefined,
+    experience:
+      queryData["experience-checkbox"] === "on"
+        ? queryData.experience
+        : undefined,
+    skills:
+      queryData["skills-checkbox"] === "on" ? queryData.skills : undefined,
+    projects:
+      queryData["projects-checkbox"] === "on" ? queryData.projects : undefined,
     shouldTranslate: queryData.shouldTranslate === "on",
   };
 

@@ -16,15 +16,22 @@ const isQueryResultTokenExceedError = (
   return false;
 };
 
+const REQUEST_BODY_KEY_LIST = [
+  "introduce",
+  "experience",
+  "skills",
+  "projects",
+  "shouldTranslate",
+  "audience",
+];
+
 const isQueryRequestBody = (value: unknown): value is QueryRequestBody => {
   if (typeof value === "object" && value !== null) {
+    const keys = Object.keys(value);
     if (
-      "introduce" in value &&
-      "experience" in value &&
-      "skills" in value &&
-      "projects" in value &&
+      "shouldTranslate" in value &&
       "audience" in value &&
-      "shouldTranslate" in value
+      keys.every((key) => REQUEST_BODY_KEY_LIST.includes(key))
     ) {
       return true;
     }

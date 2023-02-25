@@ -25,6 +25,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const [textareaHeight, setTextareaHeight] = useState<number>(MIN_HEIGHT);
     const [isResizing, setIsResizing] = useState<boolean>(false);
 
+    const checkboxName = `${name}-checkbox`;
+    const [textareaActive, setTextareaActive] = useState<boolean>(true);
+    const handleCheckboxChange = useCallback(() => {
+      setTextareaActive((prev) => !prev);
+    }, []);
+
     const handleStartResize = useCallback(() => {
       setIsResizing(true);
     }, []);
@@ -64,7 +70,19 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <>
-        <Label htmlFor={name}>{label}</Label>
+        <StyledLabelWrapper>
+          <StyledLabel htmlFor={name}>{label}</StyledLabel>
+          <label>
+            <input
+              type="checkbox"
+              name={checkboxName}
+              id={checkboxName}
+              checked={textareaActive}
+              onChange={handleCheckboxChange}
+            />
+            <span className="sr-only">{label} 포함 여부 체크박스</span>
+          </label>
+        </StyledLabelWrapper>
         <StyledTextareaWrapper>
           <StyledTextarea
             id={name}
@@ -73,6 +91,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             name={name}
             required={required}
             textareaHeight={textareaHeight}
+            disabled={!textareaActive}
           />
           <StyledTextareaHandle
             ref={handleRef}
@@ -86,6 +105,15 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     );
   },
 );
+
+const StyledLabelWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0 0.8rem;
+`;
+const StyledLabel = styled(Label)`
+  margin: 0;
+`;
 
 const StyledTextareaWrapper = styled.div`
   width: 100%;

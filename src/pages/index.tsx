@@ -54,12 +54,17 @@ export default function Home() {
         new FormData(event.currentTarget),
       );
 
-      console.log(queryData);
-
       responseTextDispatcher({ type: ResponseTextActionType.LOADING });
 
       try {
-        const isNotEmpty = checkIfObjectIsNotEmpty(queryData);
+        const objectForEmptyCheck = {
+          introduce: queryData.introduce,
+          skills: queryData.skills,
+          experience: queryData.experience,
+          projects: queryData.projects,
+        };
+
+        const isNotEmpty = checkIfObjectIsNotEmpty(objectForEmptyCheck);
         if (!isNotEmpty) {
           responseTextDispatcher({ type: ResponseTextActionType.NO_INPUT });
           return;
@@ -100,7 +105,7 @@ export default function Home() {
 
     const resumeForm = resumeFormRef.current;
 
-    if (!resumeForm) {
+    if (!resumeForm || !shouldTranslateCheckboxRef.current) {
       return;
     }
 
@@ -113,6 +118,8 @@ export default function Home() {
     resumeForm.projects = testData.projects;
 
     resumeForm.audience = testData.audience;
+
+    shouldTranslateCheckboxRef.current.checked = true;
   };
 
   return (

@@ -1,9 +1,6 @@
-export type QueryRequestBody = {
-  introduce: string;
-  experience: string;
-  skills: string;
-  projects: string;
-  audience: string;
+import type { QueryPrompt } from "./prompt";
+
+export type QueryRequestBody = QueryPrompt & {
   shouldTranslate: boolean;
 };
 

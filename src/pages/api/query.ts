@@ -29,6 +29,13 @@ const isValidBody = (body: any): body is QueryRequestBody => {
   });
 };
 
+const translateKoToEnIfExist = async (text?: string) => {
+  if (text) {
+    return await translateKoToEn(text);
+  }
+  return text;
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<QueryResponse>,
@@ -49,13 +56,13 @@ export default async function handler(
     body;
 
   if (!shouldTranslate) {
-    const promptInKr = promptTemplate(
+    const promptInKr = promptTemplate({
       audience,
       introduce,
       experience,
       skills,
       projects,
-    );
+    });
 
     const tokensCount = calNumberOfTokens(promptInKr);
     if (tokensCount > MAX_TOKENS_FOR_QUERY) {
@@ -81,19 +88,19 @@ export default async function handler(
   const [audienceEng, introduceEng, experienceEng, skillsEng, projectsEng] =
     await Promise.all([
       translateKoToEn(audience),
-      translateKoToEn(introduce),
-      translateKoToEn(experience),
-      translateKoToEn(skills),
-      translateKoToEn(projects),
+      translateKoToEnIfExist(introduce),
+      translateKoToEnIfExist(experience),
+      translateKoToEnIfExist(skills),
+      translateKoToEnIfExist(projects),
     ]);
 
-  const prompt = promptTemplate(
-    audienceEng,
-    introduceEng,
-    experienceEng,
-    skillsEng,
-    projectsEng,
-  );
+  const prompt = promptTemplate({
+    audience: audienceEng,
+    introduce: introduceEng,
+    experience: experienceEng,
+    skills: skillsEng,
+    projects: projectsEng,
+  });
 
   const tokensCount = calNumberOfTokens(prompt);
   if (tokensCount > MAX_TOKENS_FOR_QUERY) {
