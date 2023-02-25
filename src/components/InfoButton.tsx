@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import InformationIconSrc from "svgs/information.svg";
 import InfoModal from "./InfoModal";
 
 const InfoButton = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const toggleModal = () => setShowModal((prev) => !prev);
+  const toggleModal = useCallback(() => setShowModal((prev) => !prev), []);
 
   return (
     <Wrapper>

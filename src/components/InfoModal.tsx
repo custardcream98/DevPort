@@ -45,6 +45,7 @@ const InfoModal = ({ isOpened, toggleModal }: Props) => {
     }
 
     dialogRef.current.close();
+    toggleModal();
   };
 
   return mounted ? (
@@ -117,7 +118,7 @@ const Dialog = styled.dialog`
   ul {
     list-style: disc;
     padding-left: 1rem;
-    line-height: 1.3;
+    line-height: 1.5;
     li {
       margin: 0.8rem 0;
 
