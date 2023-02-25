@@ -65,7 +65,7 @@ const InfoModal = ({ isOpened, toggleModal }: Props) => {
           </li>
           <li>
             더 빠르고 풍부한 응답을 위해 Google Cloud Translate API를 활용,
-            영문으로 번역 후 ChatGPT로 보내집니다. 이후 다시 응답을 한국어로
+            영문으로 번역 후 OpenAI API로 보내집니다. 이후 다시 응답을 한국어로
             번역합니다. 따라서 내용이 일부 불확실할 수 있습니다. (영문 번역
             거치기 옵션은 거의 항상 켜주셔야 합니다.)
           </li>
