@@ -97,28 +97,24 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(
           placeholder="자기소개를 적어주세요. "
           label="자기소개"
           name="introduce"
-          required
         />
         <Textarea
           ref={skillsRef}
           placeholder="보유하고 계신 기술을 적어주세요."
           label="보유 기술"
           name="skills"
-          required
         />
         <Textarea
           ref={experienceRef}
           placeholder="경력을 적어주세요."
           label="경력"
           name="experience"
-          required
         />
         <Textarea
           ref={projectsRef}
           placeholder="경험하신 프로젝트를 적어주세요."
           label="프로젝트"
           name="projects"
-          required
         />
         <StyledButton ref={generateButtonRef}>생성하기</StyledButton>
       </StyledForm>

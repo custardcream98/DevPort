@@ -4,9 +4,11 @@ export type QueryRequestBody = QueryPrompt & {
   shouldTranslate: boolean;
 };
 
+export type ResponseWithTranslated = { korean: string; english: string };
+
 export type QueryResolvedResponse = {
   type: "resolved";
-  response: string;
+  response: ResponseWithTranslated;
 };
 type QueryRejectedResponse = {
   type: "rejected";

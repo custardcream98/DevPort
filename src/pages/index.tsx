@@ -1,12 +1,20 @@
 import { useCallback, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 
-import { Footer, InfoButton, Line, ResumeForm, Toolbar } from "components";
+import {
+  Footer,
+  InfoButton,
+  Line,
+  ResultDisplayer,
+  ResumeForm,
+  Toolbar,
+} from "components";
 
 import useTimer from "hooks/useTimer";
-import useResponseTextReducer, {
-  ResponseTextActionType,
-} from "hooks/useResponseTextReducer";
+import useResponseReducer, {
+  ResponseActionType,
+  ResponseStateType,
+} from "hooks/useResponseReducer";
 import postQuery from "fetch/postQuery";
 import { isQueryResultTokenExceedError } from "utils/typeGuards";
 import {
@@ -25,7 +33,7 @@ export default function Home() {
   const resumeFormRef = useRef<ResumeFormRef>(null);
 
   const { timer, isTimerRunning, startTimer, resetTimer } = useTimer(TIMER);
-  const { responseText, responseTextDispatcher } = useResponseTextReducer();
+  const { response, responseDispatcher } = useResponseReducer();
 
   useEffect(() => {
     const resumeForm = resumeFormRef.current;
@@ -54,7 +62,7 @@ export default function Home() {
         new FormData(event.currentTarget),
       );
 
-      responseTextDispatcher({ type: ResponseTextActionType.LOADING });
+      responseDispatcher({ type: ResponseActionType.LOADING });
 
       try {
         const objectForEmptyCheck = {
@@ -66,7 +74,7 @@ export default function Home() {
 
         const isNotEmpty = checkIfObjectIsNotEmpty(objectForEmptyCheck);
         if (!isNotEmpty) {
-          responseTextDispatcher({ type: ResponseTextActionType.NO_INPUT });
+          responseDispatcher({ type: ResponseActionType.NO_INPUT });
           return;
         }
 
@@ -74,9 +82,10 @@ export default function Home() {
 
         const result: QueryResolvedResponse = await postQuery(queryData);
 
-        responseTextDispatcher({
-          type: ResponseTextActionType.RESOLVED,
-          response: result.response,
+        responseDispatcher({
+          type: ResponseActionType.RESOLVED,
+          korean: result.response.korean,
+          english: result.response.english,
         });
       } catch (error) {
         console.error(error);
@@ -84,15 +93,15 @@ export default function Home() {
 
         if (isQueryResultTokenExceedError(error)) {
           const { tokens, max } = error;
-          responseTextDispatcher({
-            type: ResponseTextActionType.TOKENS_COUNT_EXCEEDED,
+          responseDispatcher({
+            type: ResponseActionType.TOKENS_COUNT_EXCEEDED,
             tokens,
             max,
           });
           return;
         }
 
-        responseTextDispatcher({ type: ResponseTextActionType.REJECTED });
+        responseDispatcher({ type: ResponseActionType.REJECTED });
       }
     },
     [isTimerRunning],
@@ -147,7 +156,7 @@ export default function Home() {
           handleSubmit={handleSubmit}
         />
         <Line />
-        {responseText && <StyledResultP>{responseText}</StyledResultP>}
+        <ResultDisplayer {...response} />
       </Layout>
       <Footer />
       <InfoButton />

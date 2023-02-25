@@ -10,7 +10,6 @@ type TextareaProps = {
   label: string;
   name: string;
   placeholder: string;
-  required: boolean;
 };
 
 type StyledTextareaProps = {
@@ -18,7 +17,7 @@ type StyledTextareaProps = {
 };
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, name, placeholder, required }, ref) => {
+  ({ label, name, placeholder }, ref) => {
     const textareaRef = useForwardRef<HTMLTextAreaElement>(ref);
     const handleRef = useRef<HTMLButtonElement>(null);
 
@@ -89,7 +88,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             ref={textareaRef}
             placeholder={placeholder}
             name={name}
-            required={required}
+            required={textareaActive}
             textareaHeight={textareaHeight}
             disabled={!textareaActive}
           />

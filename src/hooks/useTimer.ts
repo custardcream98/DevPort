@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const useTimer = (maxTime: number) => {
   const [timer, setTimer] = useState<number>(0);
@@ -14,13 +14,13 @@ const useTimer = (maxTime: number) => {
     }
   }, [isTimerRunning]);
 
-  const startTimer = () => {
+  const startTimer = useCallback(() => {
     setTimer(maxTime);
-  };
+  }, [maxTime]);
 
-  const resetTimer = () => {
+  const resetTimer = useCallback(() => {
     setTimer(0);
-  };
+  }, []);
 
   return { timer, isTimerRunning, startTimer, resetTimer };
 };
