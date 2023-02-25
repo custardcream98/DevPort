@@ -43,11 +43,11 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(
             throw new Error("No Element");
           }
 
-          audienceInputRef.current.value = introduce;
-          introduceRef.current.value = skills;
-          skillsRef.current.value = experience;
-          experienceRef.current.value = projects;
-          projectsRef.current.value = audience;
+          audienceInputRef.current.value = audience;
+          introduceRef.current.value = introduce;
+          skillsRef.current.value = skills;
+          experienceRef.current.value = experience;
+          projectsRef.current.value = projects;
         },
       }),
       [],

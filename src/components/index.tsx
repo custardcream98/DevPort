@@ -8,5 +8,6 @@ export { default as Input } from "./Input";
 export { default as Textarea } from "./Textarea";
 export { default as ResultDisplayer } from "./ResultDisplayer";
 export { default as TimerButton } from "./TimerButton";
+export { default as LoadingIndicator } from "./LoadingIndicator";
 
 export * from "./ResumeForm";

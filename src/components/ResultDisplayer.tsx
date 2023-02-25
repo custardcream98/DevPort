@@ -1,9 +1,15 @@
 import styled from "@emotion/styled";
 import { ResponseState, ResponseStateType } from "hooks/useResponseReducer";
+import LoadingIndicator from "./LoadingIndicator";
 
 const ResultDisplayer = (props: ResponseState) => {
   if (props.status === ResponseStateType.LOADING) {
-    return <StyledLoadingP>{props.message}</StyledLoadingP>;
+    return (
+      <>
+        <LoadingIndicator />
+        <StyledLoadingP>{props.message}</StyledLoadingP>
+      </>
+    );
   }
   if (props.status === ResponseStateType.REJECTED) {
     return <StyledResultP>{props.message}</StyledResultP>;
