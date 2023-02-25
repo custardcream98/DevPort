@@ -77,7 +77,10 @@ export default async function handler(
     try {
       const completion = await complete(promptInKr);
 
-      return res.status(200).json({ type: "resolved", response: completion });
+      return res.status(200).json({
+        type: "resolved",
+        response: { korean: completion, english: "" },
+      });
     } catch (error) {
       console.warn(error);
 
@@ -118,7 +121,7 @@ export default async function handler(
 
     return res.status(200).json({
       type: "resolved",
-      response: translatedCompletion + "\n\n" + completion,
+      response: { korean: translatedCompletion, english: completion },
     });
   } catch (error) {
     console.warn(error);
