@@ -4,7 +4,7 @@
 
 OpenAI API를 활용, 이력서를 입력하면 예상 면접 질문을 생성해주는 서비스입니다.
 
-[사용해보기](https://dev-port-custard.vercel.app/)
+[사용해보기](https://dev-port-custardcream98.vercel.app/)
 
 `테스트 데이터 입력`을 통해 간편하게 시연해볼 수 있습니다.
 
