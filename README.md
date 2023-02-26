@@ -31,13 +31,12 @@ OpenAI API를 활용, 이력서를 입력하면 예상 면접 질문을 생성�
 - 더 빠르고 풍부한 응답을 위해 Google Cloud Translate API를 활용, 영문으로 번역 후 OpenAI API로 보내집니다. 이후 다시 응답을 한국어로 번역합니다. 따라서 내용이 일부 불확실할 수 있습니다.
 - 이력서의 내용이 지나치게 길면 응답이 거절될 수 있습니다.
 
-## Backend
+## About deployed API
 
-- Next.js에서 제공하는 API로 백엔드가 배포돼 있으나, Vercel Hobby Plan의 한계로 실제로는 Firebase Functions를 활용, 따로 배포해 사용하고 있습니다. (Proxy 활용)
+- Next.js API route로 백엔드가 배포돼 있으나, Vercel Hobby Plan의 한계로 실제로는 Google Cloud Functions를 따로 배포해 사용하고 있습니다. (Next.js Proxy 활용)
 
 ## ToDos
 
-- 레이아웃 디자인
 - UX 개선
   - 이력서를 입력하는 방법, 전체 이력서의 길이 Limit 등을 쉽게 알 수 있도록 하는 방법 추가
 - 응답의 퀄리티를 높이기 위한 fine tuning 필요

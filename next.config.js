@@ -5,7 +5,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/firebasefunctions/:path*",
+        source: "/api/cloudfunctions/:path*",
         destination: "https://devport-7dfd1.web.app/:path*",
       },
     ];
