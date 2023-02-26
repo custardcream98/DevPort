@@ -1,9 +1,14 @@
 import type { QueryRequestBody, QueryResolvedResponse } from "types/api";
 
+const QUERY_API =
+  process.env.NODE_ENV === "production"
+    ? "/api/firebasefunctions/query"
+    : "/api/query";
+
 const postQuery = async (
   queryBody: QueryRequestBody,
 ): Promise<QueryResolvedResponse> => {
-  const result = await fetch("/api/query", {
+  const result = await fetch(QUERY_API, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
