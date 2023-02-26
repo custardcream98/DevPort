@@ -7,7 +7,7 @@ const nextConfig = {
       {
         source: "/api/firebasefunctions/:path*",
         destination:
-          "https://us-central1-devport-7dfd1.cloudfunctions.net/api/:path*",
+          "https://asia-northeast3-devport-7dfd1.cloudfunctions.net/api/:path*",
       },
     ];
   },
