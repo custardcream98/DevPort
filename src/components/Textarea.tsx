@@ -96,6 +96,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             ref={handleRef}
             onMouseDown={handleStartResize}
             onTouchStart={handleStartResize}
+            type="button"
           >
             <span className="sr-only">{label} 입력란 크기 조절 핸들</span>
           </StyledTextareaHandle>
