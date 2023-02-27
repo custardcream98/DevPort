@@ -75,7 +75,6 @@ export default class MyDocument extends Document {
             sizes="16x16"
             href="/images/favicons/favicon-16x16.png"
           />
-          <link rel="manifest" href="/manifest.json" />
           <meta name="msapplication-TileColor" content="#008080" />
           <meta
             name="msapplication-TileImage"
