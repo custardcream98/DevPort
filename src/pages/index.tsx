@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 import {
   Footer,
-  InfoButton,
+  InfoModal,
   Line,
   ResultDisplayer,
   ResumeForm,
@@ -138,7 +138,7 @@ export default function Home() {
         <ResultDisplayer {...response} />
       </Layout>
       <Footer />
-      <InfoButton />
+      <InfoModal />
     </>
   );
 }

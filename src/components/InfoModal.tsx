@@ -1,95 +1,117 @@
-import styled from "@emotion/styled";
-import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { css, keyframes } from "@emotion/react";
+import styled from "@emotion/styled";
+import Image from "next/image";
 
-type Props = {
-  isOpened: boolean;
-  toggleModal: () => void;
+import useMountedState from "hooks/useMountedState";
+import useDialog from "hooks/useDialog";
+
+import InformationIconSrc from "svgs/information.svg";
+
+const ANIMATION_DURATION = 300;
+
+type DialogProps = {
+  triggerClose: boolean;
 };
 
-const InfoModal = ({ isOpened, toggleModal }: Props) => {
-  const [mounted, setMounted] = useState<boolean>(false);
+const InfoModal = () => {
+  const mounted = useMountedState();
+  const { dialogRef, triggerClose, openDialog, closeDialog } = useDialog({
+    dialogCloseAnimationDuration: ANIMATION_DURATION,
+  });
 
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  if (!mounted)
+    return (
+      <Wrapper>
+        <Button type="button" onClick={openDialog}>
+          <Image
+            src={InformationIconSrc}
+            width={17}
+            height={17}
+            alt="도움말"
+            color="white"
+          />
+        </Button>
+      </Wrapper>
+    );
 
-  useEffect(() => {
-    if (mounted) {
-      return;
-    }
-    setMounted(true);
-  }, [mounted]);
-
-  useEffect(() => {
-    if (!dialogRef.current) {
-      return;
-    }
-
-    if (isOpened) {
-      dialogRef.current.showModal();
-    }
-  }, [isOpened]);
-
-  useEffect(() => {
-    if (!dialogRef.current) {
-      return;
-    }
-
-    dialogRef.current.addEventListener("close", toggleModal);
-
-    return () => dialogRef.current?.removeEventListener("close", toggleModal);
-  }, []);
-
-  const handleCloseModal = () => {
-    if (!dialogRef.current) {
-      return;
-    }
-
-    dialogRef.current.close();
-    toggleModal();
-  };
-
-  return mounted ? (
-    createPortal(
-      <Dialog ref={dialogRef}>
-        <button
-          className="close-button"
-          type="button"
-          onClick={handleCloseModal}
-        >
-          닫기
-        </button>
-        <strong>ℹ️ 참고사항</strong>
-        <ul>
-          <li>
-            <code>테스트 데이터 입력</code> 버튼을 눌러 간단하게 시연해볼 수
-            있습니다. 바로 해보세요!
-          </li>
-          <li>
-            더 빠르고 풍부한 응답을 위해 Google Cloud Translate API를 활용,
-            영문으로 번역 후 OpenAI API로 보내집니다. 이후 다시 응답을 한국어로
-            번역합니다. 따라서 내용이 일부 불확실할 수 있습니다. (영문 번역
-            거치기 옵션은 거의 항상 켜주셔야 합니다.)
-          </li>
-        </ul>
-        <strong>⚠️ 유의사항</strong>
-        <ul>
-          <li>MVP 버전으로, 불안정할 수 있습니다.</li>
-          <li>
-            지나친 사용이 계속된다면 배포가 중지될 수 있습니다. (OpenAI API에서
-            제공하는 무료 크레딧의 한계로 인한 것으로, 양해 부탁드립니다 🥲)
-            조절을 위해 매 생성당 1분의 딜레이를 두었습니다.
-          </li>
-          <li>이력서의 내용이 지나치게 길면 응답이 거절될 수 있습니다.</li>
-        </ul>
-      </Dialog>,
-      document.querySelector("#modal-root") as HTMLDivElement,
-    )
-  ) : (
-    <></>
+  return (
+    <Wrapper>
+      <Button type="button" onClick={openDialog}>
+        <Image
+          src={InformationIconSrc}
+          width={17}
+          height={17}
+          alt="도움말"
+          color="white"
+        />
+      </Button>
+      {createPortal(
+        <Dialog ref={dialogRef} triggerClose={triggerClose}>
+          <button className="close-button" type="button" onClick={closeDialog}>
+            닫기
+          </button>
+          <strong>ℹ️ 참고사항</strong>
+          <ul>
+            <li>
+              <code>테스트 데이터 입력</code> 버튼을 눌러 간단하게 시연해볼 수
+              있습니다. 바로 해보세요!
+            </li>
+            <li>
+              더 빠르고 풍부한 응답을 위해 Google Cloud Translate API를 활용,
+              영문으로 번역 후 OpenAI API로 보내집니다. 이후 다시 응답을
+              한국어로 번역합니다. 따라서 내용이 일부 불확실할 수 있습니다.
+              (영문 번역 거치기 옵션은 거의 항상 켜주셔야 합니다.)
+            </li>
+          </ul>
+          <strong>⚠️ 유의사항</strong>
+          <ul>
+            <li>MVP 버전으로, 불안정할 수 있습니다.</li>
+            <li>
+              지나친 사용이 계속된다면 배포가 중지될 수 있습니다. (OpenAI
+              API에서 제공하는 무료 크레딧의 한계로 인한 것으로, 양해
+              부탁드립니다 🥲) 조절을 위해 매 생성당 1분의 딜레이를 두었습니다.
+            </li>
+            <li>이력서의 내용이 지나치게 길면 응답이 거절될 수 있습니다.</li>
+          </ul>
+        </Dialog>,
+        document.querySelector("#modal-root") as HTMLDivElement,
+      )}
+    </Wrapper>
   );
 };
 
-const Dialog = styled.dialog`
+const Wrapper = styled.aside`
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+`;
+const Button = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: teal;
+  box-shadow: 0 0 10px 10px rgba(255, 255, 255, 0.5);
+
+  transition: transform 0.2s ease;
+
+  :hover {
+    transform: scale(1.1);
+  }
+`;
+
+const dialogKeyframes = keyframes`
+  from {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+`;
+
+const Dialog = styled.dialog<DialogProps>`
   border-radius: 5px;
   border: 1px solid #ccc;
   padding: 1rem 2rem;
@@ -134,6 +156,20 @@ const Dialog = styled.dialog`
         padding: 0.1rem 0.3rem;
       }
     }
+  }
+
+  transition: all ${ANIMATION_DURATION}ms ease-in-out;
+  opacity: 0;
+  transform: translateY(-110%);
+
+  &[open] {
+    ${({ triggerClose }) =>
+      !triggerClose &&
+      css`
+        opacity: 1;
+        transform: none;
+        animation: ${dialogKeyframes} ${ANIMATION_DURATION}ms ease-in-out;
+      `}
   }
 `;
 
