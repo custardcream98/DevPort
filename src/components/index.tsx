@@ -5,8 +5,9 @@ export { default as InfoModal } from "./InfoModal";
 export { default as Line } from "./Line";
 export { default as Input } from "./Input";
 export { default as Textarea } from "./Textarea";
-export { default as ResultDisplayer } from "./ResultDisplayer";
 export { default as TimerButton } from "./TimerButton";
 export { default as LoadingIndicator } from "./LoadingIndicator";
+export { default as Tab } from "./Tab";
 
 export * from "./ResumeForm";
+export * from "./Result";
