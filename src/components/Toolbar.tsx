@@ -14,14 +14,14 @@ const Saperator = styled.div`
   flex: 1;
 `;
 
-const ShouldTranslateCheckbox = forwardRef<
+const Checkbox = forwardRef<
   HTMLInputElement,
   ComponentPropsWithoutRef<"input">
->(function ShouldTranslateCheckboxForwarded(props, ref) {
+>(function CheckboxForwarded({ children, ...props }, ref) {
   return (
     <StyledLabel>
       <input ref={ref} {...props} />
-      영문 번역 거치기
+      {children}
     </StyledLabel>
   );
 });
@@ -43,12 +43,16 @@ const Button = styled.button`
   :hover {
     background-color: #007272;
   }
+
+  @media (max-width: 768px) {
+    margin-left: auto;
+  }
 `;
 
 const Toolbar = {
   Wrapper,
   Saperator,
-  ShouldTranslateCheckbox,
+  Checkbox,
   Button,
 };
 
