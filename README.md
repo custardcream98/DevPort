@@ -36,9 +36,11 @@ OpenAI API를 활용, 이력서를 입력하면 예상 면접 질문을 생성�
 ## About deployed API
 
 - Next.js API route로 백엔드가 배포돼 있으나, Vercel Hobby Plan의 한계로 실제로는 Google Cloud Functions를 따로 배포해 사용하고 있습니다. (Next.js Proxy 활용)
+- "gpt-3.5-turbo" 모델을 사용하고 있습니다.
 
 ## ToDos
 
 - UX 개선
   - 이력서를 입력하는 방법, 전체 이력서의 길이 Limit 등을 쉽게 알 수 있도록 하는 방법 추가
 - 응답의 퀄리티를 높이기 위한 fine tuning 필요
+- 생성된 문항을 가지고 모의 면접을 진행해볼 수 있도록 하는 기능
