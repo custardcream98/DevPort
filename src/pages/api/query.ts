@@ -14,6 +14,7 @@ const REQUEST_BODY_KEY_LIST = [
   "projects",
   "shouldTranslate",
   "audience",
+  "shouldGenerateTips",
 ];
 
 const isValidBody = (body: any): body is QueryRequestBody => {
@@ -21,7 +22,8 @@ const isValidBody = (body: any): body is QueryRequestBody => {
     if (REQUEST_BODY_KEY_LIST.includes(key)) {
       if (
         typeof body[key] === "string" ||
-        (typeof body[key] === "boolean" && key === "shouldTranslate")
+        (typeof body[key] === "boolean" &&
+          (key === "shouldTranslate" || key === "shouldGenerateTips"))
       )
         return true;
     }
@@ -58,8 +60,15 @@ export default async function handler(
     return res.status(400).json({ type: "rejected", error: "Invalid body" });
   }
 
-  const { introduce, experience, skills, projects, shouldTranslate, audience } =
-    body;
+  const {
+    introduce,
+    experience,
+    skills,
+    projects,
+    shouldTranslate,
+    audience,
+    shouldGenerateTips,
+  } = body;
 
   if (!shouldTranslate) {
     const promptInKr = promptTemplate({
@@ -68,6 +77,7 @@ export default async function handler(
       experience,
       skills,
       projects,
+      shouldGenerateTips,
     });
 
     const tokensCount = calNumberOfTokens(promptInKr);
@@ -109,6 +119,7 @@ export default async function handler(
     experience: experienceEng,
     skills: skillsEng,
     projects: projectsEng,
+    shouldGenerateTips,
   });
 
   const tokensCount = calNumberOfTokens(prompt);

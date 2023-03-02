@@ -33,6 +33,7 @@ export default function Home() {
   const { response, responseDispatcher } = useResponseReducer();
 
   const shouldTranslateCheckboxRef = useRef<HTMLInputElement>(null);
+  const shouldGenerateTipsCheckboxRef = useRef<HTMLInputElement>(null);
   const resumeFormRef = useRef<ResumeFormRef>(null);
 
   const { timer } = useTimer({
@@ -97,14 +98,21 @@ export default function Home() {
     event.preventDefault();
 
     const resumeForm = resumeFormRef.current;
+    const shouldTranslateCheckbox = shouldTranslateCheckboxRef.current;
+    const shouldGenerateTipsCheckbox = shouldGenerateTipsCheckboxRef.current;
 
-    if (!resumeForm || !shouldTranslateCheckboxRef.current) {
+    if (
+      !resumeForm ||
+      !shouldTranslateCheckbox ||
+      !shouldGenerateTipsCheckbox
+    ) {
       return;
     }
 
     resumeForm.fill(testData);
 
-    shouldTranslateCheckboxRef.current.checked = true;
+    shouldTranslateCheckbox.checked = true;
+    shouldGenerateTipsCheckbox.checked = true;
   };
 
   return (
@@ -114,13 +122,24 @@ export default function Home() {
       </Title>
       <Layout>
         <Toolbar.Wrapper>
-          <Toolbar.ShouldTranslateCheckbox
+          <Toolbar.Checkbox
+            ref={shouldGenerateTipsCheckboxRef}
+            type="checkbox"
+            name="shouldGenerateTips"
+            form="resumeForm"
+            defaultChecked
+          >
+            팁 생성하기
+          </Toolbar.Checkbox>
+          <Toolbar.Checkbox
             ref={shouldTranslateCheckboxRef}
             type="checkbox"
             name="shouldTranslate"
             form="resumeForm"
             defaultChecked
-          />
+          >
+            영문 번역 거치기
+          </Toolbar.Checkbox>
           <Toolbar.Saperator />
           <Toolbar.Button type="button" onClick={handleFillTestData}>
             테스트 데이터 입력

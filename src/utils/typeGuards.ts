@@ -23,6 +23,7 @@ const REQUEST_BODY_KEY_LIST = [
   "projects",
   "shouldTranslate",
   "audience",
+  "shouldGenerateTips",
 ];
 
 const isQueryRequestBody = (value: unknown): value is QueryRequestBody => {

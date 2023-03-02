@@ -26,6 +26,7 @@ const formDataToQueryRequestBody = (formData: FormData) => {
     projects:
       queryData["projects-checkbox"] === "on" ? queryData.projects : undefined,
     shouldTranslate: queryData.shouldTranslate === "on",
+    shouldGenerateTips: queryData.shouldGenerateTips === "on",
   };
 
   if (isQueryRequestBody(queryBody)) return queryBody;

@@ -7,8 +7,10 @@ import Textarea from "./Textarea";
 import type { ComponentPropsWithoutRef } from "react";
 import type { QueryPrompt } from "types/prompt";
 
+type ResumeFormFillData = Required<Omit<QueryPrompt, "shouldGenerateTips">>;
+
 export type ResumeFormRef = {
-  fill: (data: Required<QueryPrompt>) => void;
+  fill: (data: ResumeFormFillData) => void;
 };
 
 type Props = {
@@ -32,7 +34,7 @@ const ResumeForm = forwardRef<ResumeFormRef, Props>(
           experience,
           projects,
           audience,
-        }: Required<QueryPrompt>) {
+        }: ResumeFormFillData) {
           if (
             !audienceInputRef.current ||
             !introduceRef.current ||
