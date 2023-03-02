@@ -20,7 +20,7 @@ const postQuery = async (
     return result.json();
   }
 
-  throw new Error("Error while posting query");
+  throw await result.json();
 };
 
 export default postQuery;
