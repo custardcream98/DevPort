@@ -6,7 +6,7 @@ const promptTemplate = ({
   experience,
   skills,
   projects,
-}: QueryPrompt) => `You're a hiring manager looking for a new ${audience} to join your team. Using the information below, generate interview questions based on the resume that will help you assess the candidate's qualifications and fit for the role.
+}: QueryPrompt) => `You're a hiring manager looking for a new ${audience} to join your team. Using the information below, generate interview questions based on the resume that will help you assess the candidate's qualifications and fit for the role. And give some brief tip on how to answer the each questions, but do not give what the question sample type was.
 
 Instructions:
 - Format: Markdown
