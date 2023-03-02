@@ -1,5 +1,20 @@
 import { TranslationServiceClient } from "@google-cloud/translate";
 
+if (
+  !process.env.GOOGLE_TYPE ||
+  !process.env.GOOGLE_PROJECT_ID ||
+  !process.env.GOOGLE_PRIVATE_KEY_ID ||
+  !process.env.GOOGLE_PRIVATE_KEY ||
+  !process.env.GOOGLE_CLIENT_EMAIL ||
+  !process.env.GOOGLE_CLIENT_ID ||
+  !process.env.GOOGLE_AUTH_URI ||
+  !process.env.GOOGLE_TOKEN_URI ||
+  !process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL ||
+  !process.env.GOOGLE_CLIENT_X509_CERT_URL
+) {
+  throw new Error("GOOGLE_CREDENTIALS is not set");
+}
+
 type Language = "ko" | "en";
 
 const translationClient = new TranslationServiceClient({

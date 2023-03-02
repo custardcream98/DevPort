@@ -5,7 +5,7 @@ import { promptTemplate } from "template/prompt";
 import { calNumberOfTokens } from "lib/token";
 import type { QueryRequestBody, QueryResponse } from "types/api";
 
-const MAX_TOKENS_FOR_QUERY = 1300;
+const MAX_TOKENS_FOR_QUERY = 3300;
 
 const REQUEST_BODY_KEY_LIST = [
   "introduce",
@@ -40,6 +40,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<QueryResponse>,
 ) {
+  if (process.env.NODE_ENV !== "development") {
+    return res
+      .status(400)
+      .json({ type: "rejected", error: "Not Allowed For Production" });
+  }
+
   if (req.method !== "POST") {
     return res
       .status(405)

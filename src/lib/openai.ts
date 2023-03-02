@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
+import { logOnDev } from "utils/devUtils";
 
 const openai = new OpenAIApi(
   new Configuration({
@@ -6,40 +7,32 @@ const openai = new OpenAIApi(
   }),
 );
 
-if (
-  !process.env.GOOGLE_TYPE ||
-  !process.env.GOOGLE_PROJECT_ID ||
-  !process.env.GOOGLE_PRIVATE_KEY_ID ||
-  !process.env.GOOGLE_PRIVATE_KEY ||
-  !process.env.GOOGLE_CLIENT_EMAIL ||
-  !process.env.GOOGLE_CLIENT_ID ||
-  !process.env.GOOGLE_AUTH_URI ||
-  !process.env.GOOGLE_TOKEN_URI ||
-  !process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL ||
-  !process.env.GOOGLE_CLIENT_X509_CERT_URL
-) {
-  throw new Error("GOOGLE_CREDENTIALS is not set");
-}
+const MODEL = "gpt-3.5-turbo";
 
 const complete = async (prompt: string) => {
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt,
+  const completion = await openai.createChatCompletion({
+    model: MODEL,
+    messages: [
+      {
+        role: "system",
+        content: prompt,
+      },
+    ],
     temperature: 0.9,
-    stream: false,
-    max_tokens: 2000,
     n: 1,
   });
 
-  console.log(completion.data);
+  logOnDev(completion.data);
 
-  const { text } = completion.data.choices[0];
+  const { message } = completion.data.choices[0];
 
-  if (!text) {
+  if (!message) {
     throw new Error("No completion result");
   }
 
-  const result = text.slice(text.indexOf("1."));
+  const { content } = message;
+
+  const result = content.slice(content.indexOf("1."));
 
   return result;
 };
