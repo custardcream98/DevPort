@@ -9,7 +9,7 @@ import type { ResponseSet } from "types/api";
 
 const resolveQuestion = (set: ResponseSet) => ({
   tip: set.tip?.includes(":") ? set.tip?.split(": ")[1] : set.tip,
-  question: set.question.split(".")[1],
+  question: set.question.slice(set.question.indexOf(". ") + 2),
 });
 
 const ResultDisplayer = (props: ResponseState) => {
