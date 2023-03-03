@@ -2,6 +2,9 @@ import { useCallback, useMemo, useState } from "react";
 
 import Tab from "components/Tab";
 import StyledResultP from "./StyledResultP";
+import type { ResponseSet } from "types/api";
+import styled from "@emotion/styled";
+import ResultItem from "./ResultItem";
 
 enum TabType {
   KOREAN,
@@ -9,8 +12,8 @@ enum TabType {
 }
 
 type Props = {
-  korean?: string;
-  english?: string;
+  korean?: ResponseSet[];
+  english?: ResponseSet[];
 };
 
 const ResolvedResult = ({ korean, english }: Props) => {
@@ -43,7 +46,19 @@ const ResolvedResult = ({ korean, english }: Props) => {
           English
         </Tab.Button>
       </Tab.Wrapper>
-      <StyledResultP>{results[tab]}</StyledResultP>
+      <ul>
+        {results[tab]?.map((result, index) => {
+          const questionNumber = index + 1;
+
+          return (
+            <ResultItem
+              key={questionNumber}
+              questionNumber={questionNumber}
+              {...result}
+            />
+          );
+        })}
+      </ul>
     </>
   );
 };

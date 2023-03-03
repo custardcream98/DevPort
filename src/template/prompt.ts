@@ -18,10 +18,10 @@ Instructions:
   shouldGenerateTips
     ? `
 1. [Question]
-- Tip: [Tip]
+@# [Tip]
 
 2. [Question]
-- Tip: [Tip]
+@# [Tip]
 
 ...`
     : `Markdown`

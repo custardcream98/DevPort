@@ -4,6 +4,7 @@ import { complete } from "lib/openai";
 import { promptTemplate } from "template/prompt";
 import { calNumberOfTokens } from "lib/token";
 import type { QueryRequestBody, QueryResponse } from "types/api";
+import { resolveResult } from "lib/result";
 
 const MAX_TOKENS_FOR_QUERY = 3300;
 
@@ -95,7 +96,7 @@ export default async function handler(
 
       return res.status(200).json({
         type: "resolved",
-        response: { korean: completion, english: "" },
+        response: { korean: resolveResult(completion), english: [] },
       });
     } catch (error) {
       console.warn(error);
@@ -138,7 +139,10 @@ export default async function handler(
 
     return res.status(200).json({
       type: "resolved",
-      response: { korean: translatedCompletion, english: completion },
+      response: {
+        korean: resolveResult(translatedCompletion),
+        english: resolveResult(completion),
+      },
     });
   } catch (error) {
     console.warn(error);
