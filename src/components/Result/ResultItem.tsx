@@ -26,18 +26,20 @@ const ResultItem = ({ question, tip, questionNumber }: Props) => {
       <StyledResultItemWrapper>
         <StyledQuestionNumber>{questionNumber}</StyledQuestionNumber>
         <StyledQuestionP>{question}</StyledQuestionP>
-        <StyledFoldButton type="button" onClick={handleFoldButtonClick}>
-          <StyledFoldIcon
-            stroke="teal"
-            title="접기"
-            width={20}
-            height={20}
-            lineWidth={3}
-            shouldBeUpside={!isFolded}
-          />
-        </StyledFoldButton>
+        {tip && (
+          <StyledFoldButton type="button" onClick={handleFoldButtonClick}>
+            <StyledFoldIcon
+              stroke="teal"
+              title="접기"
+              width={20}
+              height={20}
+              lineWidth={3}
+              shouldBeUpside={!isFolded}
+            />
+          </StyledFoldButton>
+        )}
       </StyledResultItemWrapper>
-      <StyledTipP shouldBeFolded={isFolded}>{tip}</StyledTipP>
+      {tip && <StyledTipP shouldBeFolded={isFolded}>{tip}</StyledTipP>}
     </StyledResultItem>
   );
 };

@@ -5,18 +5,20 @@ const resolveResult = (result: string): ResponseSet[] => {
   const questions = results.filter((line) => !line.startsWith("@#"));
   const tips = results.filter((line) => line.startsWith("@#"));
 
+  const responseSets: ResponseSet[] = questions.map((question) => ({
+    question,
+  }));
+
+  if (tips.length === 0) {
+    return responseSets;
+  }
+
   if (questions.length !== tips.length) {
     throw new Error("Invalid result");
   }
 
-  const responseSets: ResponseSet[] = [];
-
-  questions.forEach((question, index) => {
-    const tip = tips[index];
-    responseSets.push({
-      question,
-      tip: tip ? tip.slice(3) : undefined,
-    });
+  tips.forEach((tip, index) => {
+    responseSets[index].tip = tip ? tip.slice(3) : undefined;
   });
 
   return responseSets;
