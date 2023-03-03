@@ -1,12 +1,14 @@
-import { ResponseState, ResponseStateType } from "hooks/useResponseReducer";
 import { useMemo } from "react";
-import type { ResponseSet } from "types/api";
+
+import { ResponseState, ResponseStateType } from "hooks/useResponseReducer";
 import LoadingResult from "./LoadingResult";
 import RejectedResult from "./RejectedResult";
 import ResolvedResult from "./ResolvedResult";
 
+import type { ResponseSet } from "types/api";
+
 const resolveQuestion = (set: ResponseSet) => ({
-  tip: set.tip?.split(": ")[1],
+  tip: set.tip?.includes(":") ? set.tip?.split(": ")[1] : set.tip,
   question: set.question.split(".")[1],
 });
 

@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 
 import Tab from "components/Tab";
-import StyledResultP from "./StyledResultP";
-import type { ResponseSet } from "types/api";
-import styled from "@emotion/styled";
 import ResultItem from "./ResultItem";
+
+import type { ResponseSet } from "types/api";
 
 enum TabType {
   KOREAN,
@@ -52,7 +51,7 @@ const ResolvedResult = ({ korean, english }: Props) => {
 
           return (
             <ResultItem
-              key={questionNumber}
+              key={result.question}
               questionNumber={questionNumber}
               {...result}
             />

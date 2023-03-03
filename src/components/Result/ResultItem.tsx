@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+
 import FoldIcon from "components/FoldIcon";
-import { useState } from "react";
+
 import type { ResponseSet } from "types/api";
 
 type Props = ResponseSet & { questionNumber: number };
