@@ -75,6 +75,7 @@ const StyledTipP = styled.p<StyledTipPProps>`
 
 const StyledQuestionP = styled.p`
   line-height: 1.5;
+  margin-right: 0.3rem;
 `;
 
 const StyledResultItem = styled.li`
