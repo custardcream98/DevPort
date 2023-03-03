@@ -33,7 +33,7 @@ const ResultItem = ({ question, tip, questionNumber }: Props) => {
             width={20}
             height={20}
             lineWidth={3}
-            shouldBeUpside={isFolded}
+            shouldBeUpside={!isFolded}
           />
         </StyledFoldButton>
       </StyledResultItemWrapper>
