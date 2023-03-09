@@ -1,3 +1,4 @@
+import type { CreateChatCompletionResponse } from "openai";
 import type {
   QueryRequestBody,
   QueryTokensCountExceededResponse,
@@ -40,4 +41,23 @@ const isQueryRequestBody = (value: unknown): value is QueryRequestBody => {
   return false;
 };
 
-export { isString, isQueryResultTokenExceedError, isQueryRequestBody };
+const isCreateChatCompletionResponse = (
+  data: unknown,
+): data is CreateChatCompletionResponse => {
+  if (typeof data === "object" && data !== null) {
+    if (
+      "model" in data &&
+      (data.model === "gpt-3.5-turbo" || data.model === "gpt-3.5-turbo-0301")
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export {
+  isString,
+  isQueryResultTokenExceedError,
+  isQueryRequestBody,
+  isCreateChatCompletionResponse,
+};
