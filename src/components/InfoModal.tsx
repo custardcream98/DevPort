@@ -74,6 +74,12 @@ const InfoModal = () => {
             </li>
             <li>이력서의 내용이 지나치게 길면 응답이 거절될 수 있습니다.</li>
           </ul>
+          <strong>☕ 개발자에게 커피 한 잔 사주기</strong>
+          <p>
+            <a href="https://www.buymeacoffee.com/shiwoo" target="_blank">
+              "사줘" (링크)
+            </a>
+          </p>
         </Dialog>,
         document.querySelector("#modal-root") as HTMLDivElement,
       )}
@@ -114,7 +120,7 @@ const dialogKeyframes = keyframes`
 const Dialog = styled.dialog<DialogProps>`
   border-radius: 5px;
   border: 1px solid #ccc;
-  padding: 1rem 2rem;
+  padding: 2rem 2rem;
 
   width: 80%;
 
@@ -135,6 +141,15 @@ const Dialog = styled.dialog<DialogProps>`
     margin: 1rem 0 0.5rem;
     font-size: 1.1rem;
     font-weight: 700;
+  }
+
+  a {
+    transition: all 0.2s ease;
+    color: teal;
+    display: inline-block;
+    :hover {
+      scale: 1.1;
+    }
   }
 
   ul {

@@ -6,7 +6,11 @@ const nextConfig = {
     return [
       {
         source: "/api/cloudfunctions/:path*",
-        destination: "https://devport-7dfd1.web.app/:path*",
+        destination: process.env.DEPLOYED_GCP_URL + "/:path*",
+      },
+      {
+        source: "/api/devfunctions/:path*",
+        destination: process.env.DEVLOPMENT_GCP_URL + "/:path*",
       },
     ];
   },

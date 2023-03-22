@@ -3,7 +3,7 @@ import type { QueryRequestBody, QueryResolvedResponse } from "types/api";
 const QUERY_API =
   process.env.NODE_ENV === "production"
     ? "/api/cloudfunctions/query"
-    : "/api/query";
+    : "/api/devfunctions/query";
 
 const postQuery = async (
   queryBody: QueryRequestBody,

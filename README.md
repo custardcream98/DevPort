@@ -52,7 +52,8 @@ Q. TypeScript에 대한 경험과 코드 품질을 개선하기 위해 TypeScrip
 
 ## About deployed API
 
-- Next.js API route로 백엔드가 배포돼 있으나, Vercel Hobby Plan의 한계로 실제로는 Google Cloud Functions를 따로 배포해 사용하고 있습니다. (Next.js Proxy 활용)
+- ~~Next.js API route로 백엔드가 배포돼 있으나,~~ Vercel Hobby Plan의 한계로 실제로는 Google Cloud Functions를 따로 배포해 사용하고 있습니다. (Next.js Proxy 활용)
+  - 이제 Next로는 API를 배포하지 않습니다.
 - "gpt-3.5-turbo" 모델을 사용하고 있습니다.
 
 ## ToDos
