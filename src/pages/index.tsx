@@ -27,7 +27,7 @@ import testData from "fixture/testData";
 import type { ResumeFormRef } from "components";
 import type { QueryResolvedResponse } from "types/api";
 
-const TIMER = 60;
+const TIMER = 120;
 
 export default function Home() {
   const { response, responseDispatcher } = useResponseReducer();
