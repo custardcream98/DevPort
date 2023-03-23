@@ -57,7 +57,7 @@ const responseReducer = (
     case ResponseActionType.LOADING:
       return {
         status: ResponseStateType.LOADING,
-        message: "질문을 생성하고 있습니다.",
+        message: "질문을 생성하고 있습니다. 약 1분정도 소요됩니다.",
       };
     case ResponseActionType.RESOLVED:
       return {
