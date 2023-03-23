@@ -2,8 +2,8 @@ import type { QueryRequestBody, QueryResolvedResponse } from "types/api";
 
 const QUERY_API =
   process.env.NODE_ENV === "production"
-    ? "/api/cloudfunctions/query"
-    : "/api/devfunctions/query";
+    ? process.env.NEXT_PUBLIC_DEPLOYED_GCP_URL + "/query"
+    : process.env.NEXT_PUBLIC_DEVLOPMENT_GCP_URL + "/query";
 
 const postQuery = async (
   queryBody: QueryRequestBody,
