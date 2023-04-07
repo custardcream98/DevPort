@@ -14,6 +14,16 @@ const nextConfig = {
   //     },
   //   ];
   // },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        destination: "https://devport.swygbro.com/:path*",
+        permanent: true,
+        basePath: false,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
