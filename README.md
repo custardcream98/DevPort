@@ -4,7 +4,9 @@
 
 OpenAI API를 활용, 이력서를 입력하면 예상 면접 질문을 생성해주는 서비스입니다.
 
-[사용해보기](https://dev-port-custardcream98.vercel.app/)
+[사용해보기](https://devport.swygbro.com/)
+
+- 기존에 Vercel로 배포돼있던 서비스를 SWYG로 옮겼습니다. 새로운 도메인을 확인해주세요! (기존 Vercel 배포 URL로 접속하면 새로운 도메인으로 자동 리다이렉트됩니다.)
 
 `테스트 데이터 입력`을 통해 간편하게 시연해볼 수 있습니다.
 
